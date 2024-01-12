@@ -18,7 +18,7 @@ const AccelerationDisplay = () => {
 
   const fetchDataFromServer = async () => {
     try {
-      const response = await fetch('http://192.168.0.36:4001/getdata');
+      const response = await fetch('http://192.168.0.36:5001/getdata');
       const data = await response.json();
       setReceivedData(data);
       console.log('데이터를 성공적으로 받았습니다:', data);
