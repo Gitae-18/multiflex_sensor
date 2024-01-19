@@ -4,6 +4,7 @@ import './main.css';
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
   const [receiveData, setReceiveData] = useState([]);
+  const [loading, setLoading] = useState(false);
 /*   const [receiveData, setReceiveData] = useState({
     xArray: [],
     yArray: [],
@@ -32,6 +33,11 @@ const AccelerationDisplay = () => {
       const response = await fetch('http://feelink.iptime.org:5001/getdata');
       const data = await response.json();
       setReceivedData(data);
+      if(response.ok){
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
       console.log('데이터를 성공적으로 받았습니다:', data);
      /*  setUpdate((prevData) => {
         const currentIndex = (prevData.currentIndex + 1) % arraySize;
@@ -67,11 +73,11 @@ const AccelerationDisplay = () => {
     }
   };
   useEffect(() => {
-    const id = setInterval(fetchDataFromServer, 100);
-    //const sub = setInterval(fetchData, 100);
-    setIntervalId(id);
-    //setIntervalId(sub);
-    // 컴포넌트가 언마운트될 때 인터벌 정리
+    if(loading) {
+      const id = setInterval(fetchDataFromServer, 100);
+      //const sub = setInterval(fetchData, 100);
+      setIntervalId(id);
+    }
     return () => {
       clearInterval(intervalId);
     };
@@ -79,9 +85,30 @@ const AccelerationDisplay = () => {
 
   return (
     <div>
-      {/* update !== null && receiveData !== null &&  */receivedData && (
-        <div>
-         {/*  <Plot
+    <div className="logo">
+      <img src="./images/logo.jpg" alt="no-image" width={300}/>          
+      <h3 style={{textAlign:'center'}}>스마트 안전 복합센서 <strong style={{fontSize:'20px'}}><u>실시간 모니터링 시스템</u></strong></h3>
+    </div>
+    <div className="horizontal-line"></div>
+    {receivedData && receivedData.map((item, index) => (
+      <div key={index} className="sensor-card">
+        <div className="sensor-header">이산화탄소</div>
+        <div className="sensor-body">
+          <div className="sensor-type">CO2</div>
+          <div className="sensor-value">{item.co2Value} ppm</div>
+        </div>
+      </div>
+    ))}
+    <div className="bottom">
+      <div className="horizontal-line"></div>
+    </div>
+  </div>
+  );
+};
+
+export default AccelerationDisplay;
+
+ {/*  <Plot
             data={[
               { y: update.x, name: 'X' },
               { y: update.y, name: 'Y' },
@@ -93,106 +120,7 @@ const AccelerationDisplay = () => {
               height: 700, // Set the height of the chart
             }}
           /> */}
-          <h2 style={{textAlign:'center'}}>Sensor Data Values</h2>
+         
           {/* <p>X: {receiveData.xArray[receiveData.xArray.length - 1]}</p>
           <p>Y: {receiveData.yArray[receiveData.yArray.length - 1]}</p>
           <p>Z: {receiveData.zArray[receiveData.zArray.length - 1]}</p> */}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col" width="33.3%">Sensor name</th>
-                <th scope="col">Values</th>
-                <th scope="col">Unit</th>
-              </tr>
-            </thead>
-            <tbody>
-                <tr>
-                  <th scope="row">Temperature</th>
-                  <td>{receivedData.temp}</td>
-                  <td> ºC </td>
-                </tr>
-                <tr>
-                  <th scope="row">Humidity</th>
-                  <td>{receivedData.humidity}</td>
-                  <td>%</td>
-                </tr>
-                <tr>
-                  <th scope="row">PM25</th>
-                  <td>{receivedData.pm25}</td>
-                  <td>ug/m3</td>
-                </tr>
-                <tr>
-                  <th scope="row">PM10</th>
-                  <td>{receivedData.pm10}</td>
-                  <td>ug/m3</td>
-                </tr>
-                <tr>
-                  <th scope="row">PM1</th>
-                  <td>{receivedData.pm1}</td>
-                  <td>ug/m3</td>
-                </tr>
-                <tr>
-                  <th scope="row">CO</th>
-                  <td>{receivedData.co2}</td>
-                  <td>ppm</td>
-                </tr>
-                <tr>
-                  <th scope="row">VOC</th>
-                  <td>{receivedData.voc}</td>
-                  <td>grade</td>
-                </tr>
-                <tr>
-                  <th scope="row">CO2</th>
-                  <td>{receivedData.co2}</td>
-                  <td>ppm</td>
-                </tr>
-                <tr>
-                  <th scope="row">O3</th>
-                  <td>{receivedData.o3}</td>
-                  <td>ppm</td>
-                </tr>
-                <tr>
-                  <th scope="row">NO2</th>
-                  <td>{receivedData.no2}</td>
-                  <td>ppm</td>
-                </tr>
-                <tr>
-                  <th scope="row">X-Axis</th>
-                  <td>{receivedData.x}</td>
-                  <td>g</td>
-                </tr>
-                <tr>
-                  <th scope="row">Y-Axis</th>
-                  <td>{receivedData.y}</td>
-                  <td>g</td>
-                </tr>
-                <tr>
-                  <th scope="row">Z-Axis</th>
-                  <td>{receivedData.z}</td>
-                  <td>g</td>
-                </tr>
-                <tr>
-                  <th scope="row">Warning-Temp</th>
-                  <td>{receivedData.wargningTemp}</td>
-                  <td>ºC</td>
-                </tr>
-                <tr>
-                  <th scope="row">Alarm-Temp</th>
-                  <td>{receivedData.alarmTemp}</td>
-                  <td>ºC</td>
-                </tr>
-                <tr>
-                  <th scope="row">H2S</th>
-                  <td>{receivedData.h2s}</td>
-                  <td>ppm</td>
-                </tr>
-            </tbody>              
-              
-          </table>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default AccelerationDisplay;

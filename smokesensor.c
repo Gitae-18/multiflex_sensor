@@ -238,6 +238,7 @@ int main()
     unsigned char receivedSensor[50];
 //  unsigned char receivedData[100];
 	while(1) {
+		
 		    	sendData(serialPort, data, sizeof(data));
 	            	time_sleep(0.5);
 		    	sendSerialData(serial_port, command, sizeof(command));

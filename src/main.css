@@ -7,12 +7,25 @@ tfoot {
 tbody {
   background-color: #e4f0f5;
 }
-
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  minHeight: 100px;
+}
+.logo h3{
+  position:relative;
+  text-align: center;
+  right:130px;
+}
+.logo h3 u{
+  font-size: 30px;
+}
 caption {
   padding: 10px;
   caption-side: bottom;
 }
-
 table {
   border-collapse: collapse;
   border: 2px solid rgb(200, 200, 200);
@@ -32,4 +45,41 @@ th {
 
 td {
   text-align: center;
+}
+.horizontal-line {
+  height: 2px; /* 선의 두께 */
+  background-color: grey; /* 선의 색상 */
+  width: 100%; /* 선의 가로 길이 */
+  margin: 20px 0; /* 위아래 여백 */
+}
+.sensor-card {
+  width: 200px;
+  border-radius: 15px;
+  overflow: hidden; /* 둥근 모서리를 적용하기 위해 필요 */
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 카드에 그림자 효과 추가 */
+  margin: 20px; /* 주변 여백 추가 */
+}
+
+.sensor-header {
+  background-color: #007bff; /* 파란색 배경 */
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.sensor-body {
+  background-color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.sensor-type {
+  font-size: 18px;
+  margin-bottom: 10px; /* 타입과 값을 구분하기 위한 여백 */
+}
+
+.sensor-value {
+  font-size: 32px;
+  font-weight: bold;
 }
