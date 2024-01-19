@@ -314,7 +314,7 @@ int main()
 
 						headers = curl_slist_append(headers, "Content-Type: application/json");  //HTTP 요청 헤더에 "Content-Type: application/json"을 추가
 
-						curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.36:4001/setdata"); //"http://192.168.0.36:4001/setdata" URL로 요청
+						curl_easy_setopt(curl, CURLOPT_URL, "http://feelink.iptime.org:5001/setdata"); //"http://192.168.0.36:4001/setdata" URL로 요청
 
 						curl_easy_setopt(curl, CURLOPT_POST, 1L); //HTTP POST 요청 방식을 사용하도록 설정 L = long type;
 
