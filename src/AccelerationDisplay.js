@@ -17,7 +17,7 @@ const AccelerationDisplay = () => {
   }); */
   const arraySize = 100;
   const [intervalId, setIntervalId] = useState(null);
-  const fetchData = async() => {
+/*   const fetchData = async() => {
     try{
       const response = await fetch('http://192.168.0.36:4001/getrsdata');
       const data = await response.json();
@@ -27,7 +27,7 @@ const AccelerationDisplay = () => {
     catch(error){
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
-  }
+  } */
   const fetchDataFromServer = async () => {
     try {
       const response = await fetch('http://feelink.iptime.org:5001/getdata');
@@ -73,11 +73,11 @@ const AccelerationDisplay = () => {
     }
   };
   useEffect(() => {
-    if(loading) {
+
       const id = setInterval(fetchDataFromServer, 100);
       //const sub = setInterval(fetchData, 100);
       setIntervalId(id);
-    }
+
     return () => {
       clearInterval(intervalId);
     };
@@ -94,7 +94,7 @@ const AccelerationDisplay = () => {
           <div style={{padding:'10px 100px'}}>
           {receivedData && (
             <>
-          <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
               <div className="sensor-card">
               <div className="sensor-header">Temperature</div>
               <div className="sensor-body">
