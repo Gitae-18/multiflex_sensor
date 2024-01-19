@@ -216,8 +216,8 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">화재/연기센서</div>
-          <div className="sensor-value-v">{receivedData.warningTemp}</div>
-          <div className="sensor-value-v">{receivedData.alarmTemp}</div>
+          <div className="sensor-value-v">Warn : {receivedData.wargningTemp} ℃</div>
+          <div className="sensor-value-v">Alarm : {receivedData.alarmTemp} ℃</div>
           </div>
           </div>
         </div>
