@@ -54,6 +54,7 @@ td {
 }
 .sensor-card {
   width: 200px;
+  height: 300px;
   border-radius: 15px;
   overflow: hidden; /* 둥근 모서리를 적용하기 위해 필요 */
   font-family: Arial, sans-serif;
@@ -69,17 +70,51 @@ td {
 }
 
 .sensor-body {
+  background-color: #94bbe6;
+  padding: 20px;
+  text-align: center;
+  height:70px;
+  align-items: center;
+  justify-content: center;
+  border-bottom:  2px solid  rgb(118, 118, 118);
+}
+
+.sensor-type {
+  background-color: #94bbe6; /* 버튼의 배경색 */
+  color: white; /* 텍스트 색상 */
+  padding: 10px 20px; /* 상하, 좌우 패딩 */
+  border-radius: 25px; /* 둥근 모서리의 반지름 */
+  font-size: 16px; /* 텍스트 크기 */
+  display: inline-block; /* 필요한 공간만 차지하도록 설정 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  white-space: nowrap; /* 텍스트가 줄바꿈 되지 않도록 설정 */
+  user-select: none; /* 텍스트 선택 방지 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+  margin: auto; /* 자동으로 마진을 줘서 중앙 정렬 */
+  width: fit-content; /* 내용에 맞게 너비 설정 */
+}
+#temp{
+  width:85px;
+  height:80px;
+}
+.sensor-footer {
   background-color: white;
   padding: 20px;
   text-align: center;
 }
-
-.sensor-type {
-  font-size: 18px;
-  margin-bottom: 10px; /* 타입과 값을 구분하기 위한 여백 */
-}
-
 .sensor-value {
   font-size: 32px;
   font-weight: bold;
+}
+.sensor-value-v {
+  font-size: 22px;
+  font-weight: bold;
+}
+.bottom {
+  position: fixed; /* 고정 위치 */
+  left: 0; /* 화면 왼쪽 끝 */
+  right: 0; /* 화면 오른쪽 끝 */
+  bottom: 0; /* 화면 아래쪽 끝 */
+  /* 추가 스타일링 */
 }

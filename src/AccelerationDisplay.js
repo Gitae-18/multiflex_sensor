@@ -82,27 +82,152 @@ const AccelerationDisplay = () => {
       clearInterval(intervalId);
     };
   }, [receivedData]);
-
+  
   return (
     <div>
-    <div className="logo">
-      <img src="./images/logo.jpg" alt="no-image" width={300}/>          
-      <h3 style={{textAlign:'center'}}>스마트 안전 복합센서 <strong style={{fontSize:'20px'}}><u>실시간 모니터링 시스템</u></strong></h3>
-    </div>
-    <div className="horizontal-line"></div>
-    {receivedData && receivedData.map((item, index) => (
-      <div key={index} className="sensor-card">
-        <div className="sensor-header">이산화탄소</div>
-        <div className="sensor-body">
-          <div className="sensor-type">CO2</div>
-          <div className="sensor-value">{item.co2Value} ppm</div>
+       <div className="logo">
+            <img src="./images/logo.jpg" alt="no-image" width={300}/>          
+            <h3 style={{textAlign:'center'}}>스마트 안전 복합센서 <strong style={{fontSize:'20px'}}><u>실시간 모니터링 시스템</u></strong></h3>
+            <div></div>
+          </div>
+          <div className="horizontal-line"/>
+          <div style={{padding:'10px 100px'}}>
+          {receivedData && (
+            <>
+          <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
+              <div className="sensor-card">
+              <div className="sensor-header">Temperature</div>
+              <div className="sensor-body">
+                <img src="./images/temp.png" id="temp" alt="temperature-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">온도센서</div>
+              <div className="sensor-value">{receivedData.temp} ℃</div>
+              </div>
+              </div>
+              <div className="sensor-card">
+              <div className="sensor-header">Humidity</div>
+              <div className="sensor-body">
+                <img src="./images/humidity.png" id="temp" alt="humidity-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">습도</div>
+              <div className="sensor-value">{receivedData.humidity} %</div>
+              </div>
+              </div>
+              <div className="sensor-card">
+              <div className="sensor-header">PM1.0</div>
+              <div className="sensor-body">
+                <img src="./images/PM.png" id="temp" alt="pm1.0-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">미세먼지</div>
+              <div className="sensor-value">{receivedData.pm1} ㎍/㎥</div>
+              </div>
+              </div>
+              <div className="sensor-card">
+              <div className="sensor-header">PM2.5</div>
+              <div className="sensor-body">
+                <img src="./images/PM.png" id="temp" alt="pm2.5-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">미세먼지</div>
+              <div className="sensor-value">{receivedData.pm25} ㎍/㎥</div>
+              </div>
+              </div>
+              <div className="sensor-card">
+              <div className="sensor-header">PM10</div>
+              <div className="sensor-body">
+                <img src="./images/PM.png" id="temp" alt="pm10-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">미세먼지</div>
+              <div className="sensor-value">{receivedData.pm10} ㎍/㎥</div>
+              </div>
+              </div>
+              <div className="sensor-card">
+              <div className="sensor-header">CO2</div>
+              <div className="sensor-body">
+                <img src="./images/CO2.png" id="temp" alt="Co2-image"/>
+              </div>
+              <div className="sensor-footer">
+              <div className="sensor-type">이산화탄소</div>
+              <div className="sensor-value">{receivedData.co2} ppm</div>
+              </div>
+              </div>
+          </div>
+          <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
+          <div className="sensor-card">
+          <div className="sensor-header">O3</div>
+          <div className="sensor-body">
+            <img src="./images/ozone.png" id="temp" alt="O3-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">오존</div>
+          <div className="sensor-value">{receivedData.o3} ppm</div>
+          </div>
+          </div>
+          <div className="sensor-card">
+          <div className="sensor-header">NO2</div>
+          <div className="sensor-body">
+            <img src="./images/NO2.png" id="temp" alt="no2-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">이산화질소</div>
+          <div className="sensor-value">{receivedData.no2} ppm</div>
+          </div>
+          </div>
+          <div className="sensor-card">
+          <div className="sensor-header">VOC</div>
+          <div className="sensor-body">
+            <img src="./images/voc.png" id="temp" alt="voc-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">유기화합물</div>
+          <div className="sensor-value">{receivedData.voc} ppm</div>
+          </div>
+          </div>
+          <div className="sensor-card">
+          <div className="sensor-header">H2S</div>
+          <div className="sensor-body">
+            <img src="./images/h2s.png" id="temp" alt="h2s-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">황화수소</div>
+          <div className="sensor-value">{receivedData.h2s} ppm</div>
+          </div>
+          </div>
+          <div className="sensor-card">
+          <div className="sensor-header">Vibration Sensor</div>
+          <div className="sensor-body">
+            <img src="./images/vibrate.png" id="temp" alt="temperature-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">진동센서</div>
+          <div className="sensor-value-v">{receivedData.x} g</div>
+          <div className="sensor-value-v">{receivedData.y} g</div>
+          <div className="sensor-value-v">{receivedData.z} g</div>
+          </div>
+          </div>
+          <div className="sensor-card">
+          <div className="sensor-header">Smoke/Fire sensor</div>
+          <div className="sensor-body">
+            <img src="./images/smoke.png" id="temp" alt="temperature-image"/>
+          </div>
+          <div className="sensor-footer">
+          <div className="sensor-type">화재/연기센서</div>
+          <div className="sensor-value-v">{receivedData.warningTemp}</div>
+          <div className="sensor-value-v">{receivedData.alarmTemp}</div>
+          </div>
+          </div>
         </div>
-      </div>
-    ))}
-    <div className="bottom">
-      <div className="horizontal-line"></div>
+        </>
+        )}
+        </div>
+        <div className="bottom">
+        <div className="horizontal-line"/>
+        </div>
     </div>
-  </div>
   );
 };
 
