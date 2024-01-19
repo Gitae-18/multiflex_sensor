@@ -148,7 +148,7 @@ const AccelerationDisplay = () => {
               <div className="sensor-card">
               <div className="sensor-header">CO2</div>
               <div className="sensor-body">
-                <img src="./images/CO2.png" id="temp" alt="Co2-image"/>
+                <img src="./images/co2.png" id="temp" alt="Co2-image"/>
               </div>
               <div className="sensor-footer">
               <div className="sensor-type">이산화탄소</div>
