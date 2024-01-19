@@ -3,6 +3,7 @@ import Plot from "react-plotly.js";
 import './main.css';
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
+  const [receiveData, setReceiveData] = useState([]);
 /*   const [receiveData, setReceiveData] = useState({
     xArray: [],
     yArray: [],
@@ -15,10 +16,20 @@ const AccelerationDisplay = () => {
   }); */
   const arraySize = 100;
   const [intervalId, setIntervalId] = useState(null);
-
+  const fetchData = async() => {
+    try{
+      const response = await fetch('http://192.168.0.36:4001/getrsdata');
+      const data = await response.json();
+      setReceiveData(data);
+      console.log('데이터를 성공적으로 받았습니다:', data);
+    }
+    catch(error){
+      console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
+    }
+  }
   const fetchDataFromServer = async () => {
     try {
-      const response = await fetch('http://feelink.iptime.org:5001/getdata');
+      const response = await fetch('http://192.168.0.36:4001/getdata');
       const data = await response.json();
       setReceivedData(data);
       console.log('데이터를 성공적으로 받았습니다:', data);
@@ -57,8 +68,9 @@ const AccelerationDisplay = () => {
   };
   useEffect(() => {
     const id = setInterval(fetchDataFromServer, 100);
+    //const sub = setInterval(fetchData, 100);
     setIntervalId(id);
-
+    //setIntervalId(sub);
     // 컴포넌트가 언마운트될 때 인터벌 정리
     return () => {
       clearInterval(intervalId);
@@ -120,6 +132,16 @@ const AccelerationDisplay = () => {
                   <td>ug/m3</td>
                 </tr>
                 <tr>
+                  <th scope="row">CO</th>
+                  <td>{receivedData.co2}</td>
+                  <td>ppm</td>
+                </tr>
+                <tr>
+                  <th scope="row">VOC</th>
+                  <td>{receivedData.voc}</td>
+                  <td>grade</td>
+                </tr>
+                <tr>
                   <th scope="row">CO2</th>
                   <td>{receivedData.co2}</td>
                   <td>ppm</td>
@@ -148,6 +170,21 @@ const AccelerationDisplay = () => {
                   <th scope="row">Z-Axis</th>
                   <td>{receivedData.z}</td>
                   <td>g</td>
+                </tr>
+                <tr>
+                  <th scope="row">Warning-Temp</th>
+                  <td>{receivedData.wargningTemp}</td>
+                  <td>ºC</td>
+                </tr>
+                <tr>
+                  <th scope="row">Alarm-Temp</th>
+                  <td>{receivedData.alarmTemp}</td>
+                  <td>ºC</td>
+                </tr>
+                <tr>
+                  <th scope="row">H2S</th>
+                  <td>{receivedData.h2s}</td>
+                  <td>ppm</td>
                 </tr>
             </tbody>              
               

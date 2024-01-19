@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const wsModule =require('ws');
-const port = 5001;
+const port = 4001;
 app.use(cors());
 app.use(bodyParser.json());
 app.post('/', (req, res, next) => {
@@ -18,7 +18,33 @@ app.get('/', (req, res) => {
     res.send('Hello, this is the root path!');
 });
 let storedData = null;
+let storedRsData = null;
+app.post('/rsdata', (req,res) => {
+    const data = req.body;
+    //sendData = data;
+    console.log('Received data:', data);
 
+    if (!req.body) {
+        return res.status(400).json({
+            status: 'error',
+            error: 'req body cannot be empty',
+        });
+    }
+    // 여기에서 React 서버에 데이터 전달 등의 작업 수행
+    storedRsData = data;
+    res.status(200).json(data);
+});
+app.get('/getrsdata',(req, res) => {
+    if (!storedRsData) {
+        return res.status(404).json({
+            status: 'error',
+            error: 'Data not found',
+        });
+    }
+
+    // 저장된 데이터를 클라이언트에 응답
+    res.status(200).json(storedRsData);
+})
 app.post('/setdata', (req, res) => {
     const data = req.body;
     //sendData = data;
