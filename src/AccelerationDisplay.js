@@ -86,9 +86,8 @@ const AccelerationDisplay = () => {
   return (
     <div>
        <div className="logo">
-            <img id="logo" src="./images/logo.jpg" alt="no-image"/>          
-            <h3 style={{textAlign:'center', marginTop:'30px'}}>스마트 안전 복합센서 <strong style={{fontSize:'22px'}}><u>실시간 모니터링 시스템</u></strong></h3>
-            <div></div>        
+           {/*  <img id="logo" src="./images/logo.jpg" alt="no-image"/>   */}        
+          <h3 style={{textAlign:'center', marginTop:'30px'}}>스마트 안전 복합센서 <strong style={{fontSize:'26px'}}><u>실시간 모니터링 시스템</u></strong></h3>     
           <select name="ids" id="id-select">
                 <option value="" selected disabled>센서 선택</option>
                 <option value="ID1">Sensor-1</option>
@@ -96,10 +95,10 @@ const AccelerationDisplay = () => {
                 <option value="ID3">Sensor-3</option>
                 <option value="ID4">Sensor-4</option>
                 <option value="ID5">Sensor-5</option>
-         </select>
-          </div>
+          </select>
+        </div>
           <div className="horizontal-line"/>
-          <div style={{padding:'30px 100px'}}>
+          <div style={{padding:'20px 100px'}}>
           {receivedData && (
             <>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
@@ -179,7 +178,7 @@ const AccelerationDisplay = () => {
           <div className="sensor-card">
           <div className="sensor-header">NO2</div>
           <div className="sensor-body">
-            <img src="./images/NO2.png" id="temp" alt="no2-image"/>
+            <img src="./images/NO2.png" id="temp" alt="no2-image" style={{width:'80%',height:'160%'}}/>
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">이산화질소</div>
@@ -238,11 +237,11 @@ const AccelerationDisplay = () => {
         )}
         </div>
         <div className="bottom">
-        <div className="horizontal-line2"/>
-        <div style={{display:'flex',justifyContent:'space-between',margin:'10px'}}>
-        <h5>COPYRIGHT © FEELINK KOREA ALL RIGHTS RESERVED.</h5>
-        <h4>*최적 해상도 : 1920 * 1080 (16:9)</h4>
-        </div>
+       {/*  <div className="horizontal-line"/>
+        <div className="copyright">
+          <h5>COPYRIGHT © FEELINK KOREA ALL RIGHTS RESERVED.</h5>
+          <h4>*최적 해상도 : 1920 * 1080 (16:9)</h4>
+        </div> */}
         </div>
     </div>
   );

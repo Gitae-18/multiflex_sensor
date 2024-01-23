@@ -1,66 +1,59 @@
-thead,
-tfoot {
-  background-color: #3f87a6;
-  color: #fff;
-}
-
-tbody {
-  background-color: #e4f0f5;
+/* General styles */
+body {
+  font-family: 'Arial', sans-serif;
 }
 .logo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  minHeight: 100px;
-  margin-top:10px;
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Place content on opposite ends */
+  margin-top: 30px; /* Adjust as needed */
+  padding: 0 15px; /* Add padding to the left and right */
+}
+
+.logo h3 {
+  margin: 0; /* Remove margin from h3 to align text properly */
+  display: inline-block; /* Allow the title to size to its content */
+}
+
+#id-select {
+  margin: 0; /* Remove any default margin */
+  padding-left: 10px; /* Add some padding before the dropdown */
+}
+
+/* This will ensure no extra space between the title and the dropdown */
+.logo * + * {
+  margin-left: 10px; /* Adjust space between the elements */
+}
+.logo {
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Align items vertically */
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px; 
+}
+#id-select {
+  margin-top: 2%;
+/*   width:200px;
+  height:25px; */
+  width:150px;
+  font-weight: 600;
+  flex-grow:0;
+  margin-left:25px;
+  text-align: center;
 }
 .logo h3{
-  position:relative;
+  margin: 0; /* Remove margin from h3 to align text properly */
   text-align: center;
-  left:100px;
-  font-size: 26px;
 }
 .logo h3 u{
-  font-size: 32px;
-}
-
-caption {
-  padding: 10px;
-  caption-side: bottom;
-}
-table {
-  border-collapse: collapse;
-  border: 2px solid rgb(200, 200, 200);
-  letter-spacing: 1px;
-  font-family: sans-serif;
-  font-size: 0.8rem;
-  width:100%;
-  margin:0 auto;
-  table-layout: fixed;
-}
-
-td,
-th {
-  border: 1px solid rgb(190, 190, 190);
-  padding: 5px 10px;
-}
-
-td {
-  text-align: center;
+  font-size: 30px;
 }
 .horizontal-line {
-  height: 2px; /* 선의 두께 */
-  background-color: grey; /* 선의 색상 */
-  width: 100%; /* 선의 가로 길이 */
-  margin: 30px 10px; /* 위아래 여백 */
+  border-top: 2px solid #000;
+  margin: 20px 0;
 }
-.horizontal-line2{
-  height: 2px; /* 선의 두께 */
-  background-color: grey; /* 선의 색상 */
-  width: 100%; /* 선의 가로 길이 */
-  margin: 50px 0; /* 위아래 여백 */
-}
+
+/* Styles for sensor cards */
 .sensor-card {
   width: 200px;
   height: 300px;
@@ -76,8 +69,7 @@ td {
   color: white;
   padding: 10px;
   text-align: center;
-  font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .sensor-body {
@@ -92,7 +84,7 @@ td {
 }
 
 .sensor-type {
-  background-color: #94bbe6; /* 버튼의 배경색 */
+  background-color: #b6d3f1; /* 버튼의 배경색 */
   color: black; /* 텍스트 색상 */
   padding: 10px 20px; /* 상하, 좌우 패딩 */
   border-radius: 25px; /* 둥근 모서리의 반지름 */
@@ -105,7 +97,7 @@ td {
   cursor: pointer; /* 마우스 오버 시 커서 변경 */
   margin: auto; /* 자동으로 마진을 줘서 중앙 정렬 */
   width: fit-content; /* 내용에 맞게 너비 설정 */
-  font-weight: bold;
+  font-weight:600;
 }
 #temp{
   width:85px;
@@ -125,42 +117,16 @@ td {
   font-size: 22px;
   font-weight: bold;
 }
+
 .bottom {
-  justify-content: space-between; /* This will push the h4 to the right */
-  align-items: center; /* This will vertically center the items */
-  position: fixed; /* 고정 위치 */
-  justify-items: center;
-  left: 0; /* 화면 왼쪽 끝 */
-  right: 0; /* 화면 오른쪽 끝 */
-  bottom: 0; /* 화면 아래쪽 끝 */
-  /* 추가 스타일링 */
+  text-align: center;
+  margin-top: 40px;
 }
-.sensor-body .sensor-img {
-  max-width: 100%;
-  max-height: 100px;
-  object-fit: contain;
-}
-.bottom h5 {
-  margin-left:250px;
-  position:relative;
-  bottom:15px;
-}
-.bottom h4 {
-  text-align: right;
-  margin-right:250px;
-  position:relative;
-  bottom:15px;
-}
-#logo{
-  margin:10px;
-  padding-top:10px;
-  width:200px;
-  position: relative;
-  left:250px;
-}
-.logo select{
-  position: relative;
-  right:265px;
-  width:190px;
-  height:50px;
+
+/* Responsive design for different screen sizes */
+@media (max-width: 768px) {
+  .sensor-card {
+    width: 100%; /* Full width on small screens */
+    margin: 10px 0;
+  }
 }
