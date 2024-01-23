@@ -86,12 +86,20 @@ const AccelerationDisplay = () => {
   return (
     <div>
        <div className="logo">
-            <img src="./images/logo.jpg" alt="no-image" width={300}/>          
-            <h3 style={{textAlign:'center'}}>스마트 안전 복합센서 <strong style={{fontSize:'20px'}}><u>실시간 모니터링 시스템</u></strong></h3>
-            <div></div>
+            <img id="logo" src="./images/logo.jpg" alt="no-image"/>          
+            <h3 style={{textAlign:'center', marginTop:'30px'}}>스마트 안전 복합센서 <strong style={{fontSize:'22px'}}><u>실시간 모니터링 시스템</u></strong></h3>
+            <div></div>        
+          <select name="ids" id="id-select">
+                <option value="" selected disabled>센서 선택</option>
+                <option value="ID1">Sensor-1</option>
+                <option value="ID2">Sensor-2</option>
+                <option value="ID3">Sensor-3</option>
+                <option value="ID4">Sensor-4</option>
+                <option value="ID5">Sensor-5</option>
+         </select>
           </div>
           <div className="horizontal-line"/>
-          <div style={{padding:'10px 100px'}}>
+          <div style={{padding:'30px 100px'}}>
           {receivedData && (
             <>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
@@ -101,7 +109,7 @@ const AccelerationDisplay = () => {
                 <img src="./images/temp.png" id="temp" alt="temperature-image"/>
               </div>
               <div className="sensor-footer">
-              <div className="sensor-type">온도센서</div>
+              <div className="sensor-type">온도</div>
               <div className="sensor-value">{receivedData.temp} ℃</div>
               </div>
               </div>
@@ -112,7 +120,8 @@ const AccelerationDisplay = () => {
               </div>
               <div className="sensor-footer">
               <div className="sensor-type">습도</div>
-              <div className="sensor-value">{receivedData.humidity} %</div>
+              <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.humidity} %</div>
+              
               </div>
               </div>
               <div className="sensor-card">
@@ -121,7 +130,7 @@ const AccelerationDisplay = () => {
                 <img src="./images/PM.png" id="temp" alt="pm1.0-image"/>
               </div>
               <div className="sensor-footer">
-              <div className="sensor-type">미세먼지</div>
+              <div className="sensor-type">극초미세먼지</div>
               <div className="sensor-value">{receivedData.pm1} ㎍/㎥</div>
               </div>
               </div>
@@ -131,7 +140,7 @@ const AccelerationDisplay = () => {
                 <img src="./images/PM.png" id="temp" alt="pm2.5-image"/>
               </div>
               <div className="sensor-footer">
-              <div className="sensor-type">미세먼지</div>
+              <div className="sensor-type">초미세먼지</div>
               <div className="sensor-value">{receivedData.pm25} ㎍/㎥</div>
               </div>
               </div>
@@ -152,7 +161,7 @@ const AccelerationDisplay = () => {
               </div>
               <div className="sensor-footer">
               <div className="sensor-type">이산화탄소</div>
-              <div className="sensor-value">{receivedData.co2} ppm</div>
+              <div className="sensor-value" style={{position:'relative',top:'10px'}}>{receivedData.co2} ppm</div>
               </div>
               </div>
           </div>
@@ -164,7 +173,7 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">오존</div>
-          <div className="sensor-value">{receivedData.o3} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.o3} ppm</div>
           </div>
           </div>
           <div className="sensor-card">
@@ -174,7 +183,7 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">이산화질소</div>
-          <div className="sensor-value">{receivedData.no2} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.no2} ppm</div>
           </div>
           </div>
           <div className="sensor-card">
@@ -184,7 +193,7 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">유기화합물</div>
-          <div className="sensor-value">{receivedData.voc} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.voc} ppm</div>
           </div>
           </div>
           <div className="sensor-card">
@@ -194,7 +203,7 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">황화수소</div>
-          <div className="sensor-value">{receivedData.h2s} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.h2s} ppm</div>
           </div>
           </div>
           <div className="sensor-card">
@@ -204,9 +213,11 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">진동센서</div>
-          <div className="sensor-value-v">{receivedData.x} g</div>
-          <div className="sensor-value-v">{receivedData.y} g</div>
-          <div className="sensor-value-v">{receivedData.z} g</div>
+          <div style={{marginTop:'5px'}}>
+          <div className="sensor-value-v">X:{receivedData.x} g</div>
+          <div className="sensor-value-v">Y:{receivedData.y} g</div>
+          <div className="sensor-value-v">Z:{receivedData.z} g</div>
+          </div>
           </div>
           </div>
           <div className="sensor-card">
@@ -216,8 +227,10 @@ const AccelerationDisplay = () => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">화재/연기센서</div>
+          <div style={{marginTop:'8px'}}>
           <div className="sensor-value-v">Warn : {receivedData.wargningTemp} ℃</div>
           <div className="sensor-value-v">Alarm : {receivedData.alarmTemp} ℃</div>
+          </div>
           </div>
           </div>
         </div>
@@ -225,7 +238,11 @@ const AccelerationDisplay = () => {
         )}
         </div>
         <div className="bottom">
-        <div className="horizontal-line"/>
+        <div className="horizontal-line2"/>
+        <div style={{display:'flex',justifyContent:'space-between',margin:'10px'}}>
+        <h5>COPYRIGHT © FEELINK KOREA ALL RIGHTS RESERVED.</h5>
+        <h4>*최적 해상도 : 1920 * 1080 (16:9)</h4>
+        </div>
         </div>
     </div>
   );

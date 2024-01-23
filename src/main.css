@@ -13,15 +13,18 @@ tbody {
   justify-content: space-between;
   position: relative;
   minHeight: 100px;
+  margin-top:10px;
 }
 .logo h3{
   position:relative;
   text-align: center;
-  right:130px;
+  left:100px;
+  font-size: 26px;
 }
 .logo h3 u{
-  font-size: 30px;
+  font-size: 32px;
 }
+
 caption {
   padding: 10px;
   caption-side: bottom;
@@ -50,7 +53,13 @@ td {
   height: 2px; /* 선의 두께 */
   background-color: grey; /* 선의 색상 */
   width: 100%; /* 선의 가로 길이 */
-  margin: 20px 0; /* 위아래 여백 */
+  margin: 30px 10px; /* 위아래 여백 */
+}
+.horizontal-line2{
+  height: 2px; /* 선의 두께 */
+  background-color: grey; /* 선의 색상 */
+  width: 100%; /* 선의 가로 길이 */
+  margin: 50px 0; /* 위아래 여백 */
 }
 .sensor-card {
   width: 200px;
@@ -63,13 +72,16 @@ td {
 }
 
 .sensor-header {
-  background-color: #007bff; /* 파란색 배경 */
+  background-color: #043b75; /* 파란색 배경 */
   color: white;
   padding: 10px;
   text-align: center;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .sensor-body {
+  display:flex;
   background-color: #94bbe6;
   padding: 20px;
   text-align: center;
@@ -81,7 +93,7 @@ td {
 
 .sensor-type {
   background-color: #94bbe6; /* 버튼의 배경색 */
-  color: white; /* 텍스트 색상 */
+  color: black; /* 텍스트 색상 */
   padding: 10px 20px; /* 상하, 좌우 패딩 */
   border-radius: 25px; /* 둥근 모서리의 반지름 */
   font-size: 16px; /* 텍스트 크기 */
@@ -93,6 +105,7 @@ td {
   cursor: pointer; /* 마우스 오버 시 커서 변경 */
   margin: auto; /* 자동으로 마진을 줘서 중앙 정렬 */
   width: fit-content; /* 내용에 맞게 너비 설정 */
+  font-weight: bold;
 }
 #temp{
   width:85px;
@@ -106,15 +119,48 @@ td {
 .sensor-value {
   font-size: 32px;
   font-weight: bold;
+  margin-top:10px;
 }
 .sensor-value-v {
   font-size: 22px;
   font-weight: bold;
 }
 .bottom {
+  justify-content: space-between; /* This will push the h4 to the right */
+  align-items: center; /* This will vertically center the items */
   position: fixed; /* 고정 위치 */
+  justify-items: center;
   left: 0; /* 화면 왼쪽 끝 */
   right: 0; /* 화면 오른쪽 끝 */
   bottom: 0; /* 화면 아래쪽 끝 */
   /* 추가 스타일링 */
+}
+.sensor-body .sensor-img {
+  max-width: 100%;
+  max-height: 100px;
+  object-fit: contain;
+}
+.bottom h5 {
+  margin-left:250px;
+  position:relative;
+  bottom:15px;
+}
+.bottom h4 {
+  text-align: right;
+  margin-right:250px;
+  position:relative;
+  bottom:15px;
+}
+#logo{
+  margin:10px;
+  padding-top:10px;
+  width:200px;
+  position: relative;
+  left:250px;
+}
+.logo select{
+  position: relative;
+  right:265px;
+  width:190px;
+  height:50px;
 }
