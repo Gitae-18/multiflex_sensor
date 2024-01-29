@@ -39,7 +39,7 @@ app.post('/setdata', (req, res) => {
 app.get('/getdata', (req, res) => {
 
     const id = req.query.id;
-
+    console.log(storedData);
     if (!id) {
         return res.status(400).json({
             status: 'error',

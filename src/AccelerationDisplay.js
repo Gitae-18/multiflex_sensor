@@ -18,12 +18,7 @@ const AccelerationDisplay = () => {
 };
   const fetchDataFromServer = useCallback(async () => {
     try {
-      const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
-        method:"GET",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`);
       const data = await response.json();
       setReceivedData(data);
       if(response.ok){
@@ -47,6 +42,7 @@ const AccelerationDisplay = () => {
       clearInterval(intervalId);
     };
   }, [receivedData, deviceID]);
+  console.log(deviceID);
   /* useEffect(() => {
     
     fetchDataFromServer();
