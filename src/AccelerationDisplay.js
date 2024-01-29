@@ -29,9 +29,12 @@ const AccelerationDisplay = () => {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
   } */
-  const selectID = () => {
-
-  }
+  const selectID = (event) => {
+    const selectedID = event.target.value;
+    setDeviceID(selectedID);
+    // 선택된 센서 ID를 state에 업데이트
+    // 다른 작업도 필요하다면 여기에 추가할 수 있습니다.
+};
   const fetchDataFromServer = useCallback(async () => {
     try {
       const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
@@ -69,7 +72,7 @@ const AccelerationDisplay = () => {
        <div className="logo">
            {/*  <img id="logo" src="./images/logo.jpg" alt="no-image"/>   */}        
           <h3 style={{textAlign:'center', marginTop:'30px'}}>스마트 안전 복합센서 <strong style={{fontSize:'26px'}}><u>실시간 모니터링 시스템</u></strong></h3>     
-          <select name="ids" id="id-select">
+          <select name="ids" id="id-select" onChange={selectID} value={deviceID}>
                 <option value="" selected disabled>센서 선택</option>
                 <option value="1">Sensor-1</option>
                 <option value="2">Sensor-2</option>
