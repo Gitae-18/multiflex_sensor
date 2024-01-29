@@ -37,21 +37,21 @@ const AccelerationDisplay = () => {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
   },[deviceID]);
-  /* useEffect(() => {
+  useEffect(() => {
 
-      const id = setInterval(fetchDataFromServer, 100);
-      //const sub = setInterval(fetchData, 100);
+      const id = setInterval(fetchDataFromServer, 3000);
+
       setIntervalId(id);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [receivedData]); */
-  useEffect(() => {
+  }, [receivedData, deviceID]);
+  /* useEffect(() => {
     
     fetchDataFromServer();
 
-}, [deviceID]);
+}, [deviceID]); */
   
   return (
     <div>
