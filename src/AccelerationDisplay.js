@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Plot from "react-plotly.js";
 import './main.css';
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
   const [receiveData, setReceiveData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [deviceID, setDeviceID] = useState("1");
 /*   const [receiveData, setReceiveData] = useState({
     xArray: [],
     yArray: [],
@@ -28,9 +29,12 @@ const AccelerationDisplay = () => {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
   } */
-  const fetchDataFromServer = async () => {
+  const selectID = () => {
+
+  }
+  const fetchDataFromServer = useCallback(async () => {
     try {
-      const response = await fetch('http://feelink.iptime.org:5001/getdata');
+      const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`);
       const data = await response.json();
       setReceivedData(data);
       if(response.ok){
@@ -39,39 +43,11 @@ const AccelerationDisplay = () => {
         setLoading(false);
       }
       console.log('데이터를 성공적으로 받았습니다:', data);
-     /*  setUpdate((prevData) => {
-        const currentIndex = (prevData.currentIndex + 1) % arraySize;
-
-        return {
-          x: [
-            ...prevData.x.slice(0, currentIndex),
-            data.x,
-            ...prevData.x.slice(currentIndex + 1),
-          ],
-          y: [
-            ...prevData.y.slice(0, currentIndex),
-            data.y,
-            ...prevData.y.slice(currentIndex + 1),
-          ],
-          z: [
-            ...prevData.z.slice(0, currentIndex),
-            data.z,
-            ...prevData.z.slice(currentIndex + 1),
-          ],
-          currentIndex,
-        };
-      });
-      setReceiveData((prevData) => ({
-        xArray: [...prevData.xArray, data.x],
-        yArray: [...prevData.yArray, data.y],
-        zArray: [...prevData.zArray, data.z],
-      }));
-       */
-      // 받은 데이터를 상태에 저장하거나 다른 작업을 수행할 수 있습니다.
+    
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
-  };
+  },[deviceID]);
   useEffect(() => {
 
       const id = setInterval(fetchDataFromServer, 100);
@@ -90,11 +66,11 @@ const AccelerationDisplay = () => {
           <h3 style={{textAlign:'center', marginTop:'30px'}}>스마트 안전 복합센서 <strong style={{fontSize:'26px'}}><u>실시간 모니터링 시스템</u></strong></h3>     
           <select name="ids" id="id-select">
                 <option value="" selected disabled>센서 선택</option>
-                <option value="ID1">Sensor-1</option>
-                <option value="ID2">Sensor-2</option>
-                <option value="ID3">Sensor-3</option>
-                <option value="ID4">Sensor-4</option>
-                <option value="ID5">Sensor-5</option>
+                <option value="1">Sensor-1</option>
+                <option value="2">Sensor-2</option>
+                <option value="3">Sensor-3</option>
+                <option value="4">Sensor-4</option>
+                <option value="5">Sensor-5</option>
           </select>
         </div>
           <div className="horizontal-line"/>
@@ -265,3 +241,34 @@ export default AccelerationDisplay;
           {/* <p>X: {receiveData.xArray[receiveData.xArray.length - 1]}</p>
           <p>Y: {receiveData.yArray[receiveData.yArray.length - 1]}</p>
           <p>Z: {receiveData.zArray[receiveData.zArray.length - 1]}</p> */}
+
+
+           /*  setUpdate((prevData) => {
+        const currentIndex = (prevData.currentIndex + 1) % arraySize;
+
+        return {
+          x: [
+            ...prevData.x.slice(0, currentIndex),
+            data.x,
+            ...prevData.x.slice(currentIndex + 1),
+          ],
+          y: [
+            ...prevData.y.slice(0, currentIndex),
+            data.y,
+            ...prevData.y.slice(currentIndex + 1),
+          ],
+          z: [
+            ...prevData.z.slice(0, currentIndex),
+            data.z,
+            ...prevData.z.slice(currentIndex + 1),
+          ],
+          currentIndex,
+        };
+      });
+      setReceiveData((prevData) => ({
+        xArray: [...prevData.xArray, data.x],
+        yArray: [...prevData.yArray, data.y],
+        zArray: [...prevData.zArray, data.z],
+      }));
+       */
+      // 받은 데이터를 상태에 저장하거나 다른 작업을 수행할 수 있습니다.

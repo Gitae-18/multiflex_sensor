@@ -13,38 +13,14 @@ app.post('/', (req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
+let storedData = null;
+//let storedRsData = null;
+//let filteredData = null;
 app.get('/', (req, res) => {
     console.log('success');
     res.send('Hello, this is the root path!');
 });
-let storedData = null;
-let storedRsData = null;
-app.post('/rsdata', (req,res) => {
-    const data = req.body;
-    //sendData = data;
-    console.log('Received data:', data);
 
-    if (!req.body) {
-        return res.status(400).json({
-            status: 'error',
-            error: 'req body cannot be empty',
-        });
-    }
-    // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    storedRsData = data;
-    res.status(200).json(data);
-});
-app.get('/getrsdata',(req, res) => {
-    if (!storedRsData) {
-        return res.status(404).json({
-            status: 'error',
-            error: 'Data not found',
-        });
-    }
-
-    // 저장된 데이터를 클라이언트에 응답
-    res.status(200).json(storedRsData);
-})
 app.post('/setdata', (req, res) => {
     const data = req.body;
     //sendData = data;
@@ -61,15 +37,31 @@ app.post('/setdata', (req, res) => {
     res.status(200).json(data);
 });
 app.get('/getdata', (req, res) => {
+
+    const id = req.query.id;
+
+    if (!id) {
+        return res.status(400).json({
+            status: 'error',
+            error: 'ID parameter is missing in the request',
+        });
+    }
+
     if (!storedData) {
         return res.status(404).json({
             status: 'error',
             error: 'Data not found',
         });
     }
-
+    const filteredData = storedData.find(item => item.id === parseInt(id));
+    if (!filteredData) {
+        return res.status(404).json({
+            status: 'error',
+            error: 'Data not found for the specified ID',
+        });
+    }
     // 저장된 데이터를 클라이언트에 응답
-    res.status(200).json(storedData);
+    res.status(200).json(filteredData);
 });
 
 /* app.use(express.static(path.join(__dirname, '/build')));
