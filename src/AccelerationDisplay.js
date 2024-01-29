@@ -6,29 +6,10 @@ const AccelerationDisplay = () => {
   const [receiveData, setReceiveData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deviceID, setDeviceID] = useState("1");
-/*   const [receiveData, setReceiveData] = useState({
-    xArray: [],
-    yArray: [],
-    zArray: [],
-  })
-  const [update, setUpdate] = useState({
-    x: new Array(100).fill(NaN),
-    y: new Array(100).fill(NaN),
-    z: new Array(100).fill(NaN),
-  }); */
+
   const arraySize = 100;
   const [intervalId, setIntervalId] = useState(null);
-/*   const fetchData = async() => {
-    try{
-      const response = await fetch('http://192.168.0.36:4001/getrsdata');
-      const data = await response.json();
-      setReceiveData(data);
-      console.log('데이터를 성공적으로 받았습니다:', data);
-    }
-    catch(error){
-      console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
-    }
-  } */
+
   const selectID = (event) => {
     const selectedID = event.target.value;
     setDeviceID(selectedID);
@@ -56,7 +37,7 @@ const AccelerationDisplay = () => {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     }
   },[deviceID]);
-  useEffect(() => {
+  /* useEffect(() => {
 
       const id = setInterval(fetchDataFromServer, 100);
       //const sub = setInterval(fetchData, 100);
@@ -65,7 +46,12 @@ const AccelerationDisplay = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [receivedData]);
+  }, [receivedData]); */
+  useEffect(() => {
+    
+    fetchDataFromServer();
+
+}, [deviceID]);
   
   return (
     <div>
@@ -221,11 +207,6 @@ const AccelerationDisplay = () => {
         )}
         </div>
         <div className="bottom">
-       {/*  <div className="horizontal-line"/>
-        <div className="copyright">
-          <h5>COPYRIGHT © FEELINK KOREA ALL RIGHTS RESERVED.</h5>
-          <h4>*최적 해상도 : 1920 * 1080 (16:9)</h4>
-        </div> */}
         </div>
     </div>
   );
@@ -233,6 +214,17 @@ const AccelerationDisplay = () => {
 
 export default AccelerationDisplay;
 
+
+/*   const [receiveData, setReceiveData] = useState({
+    xArray: [],
+    yArray: [],
+    zArray: [],
+  })
+  const [update, setUpdate] = useState({
+    x: new Array(100).fill(NaN),
+    y: new Array(100).fill(NaN),
+    z: new Array(100).fill(NaN),
+  }); */
  {/*  <Plot
             data={[
               { y: update.x, name: 'X' },
