@@ -60,7 +60,10 @@ app.get('/getdata', (req, res) => {
     let filteredData;
 
     // 배열에서 해당 ID 값과 일치하는 데이터 찾기
-    filteredData = dataArray.filter(item => item.id === selectedID);
+    if(dataArray.id === selectedID)
+    {
+        filteredData = dataArray;
+    }
     console.log(filteredData);
     //console.log(filteredData);
     if (filteredData.length === 0) {
