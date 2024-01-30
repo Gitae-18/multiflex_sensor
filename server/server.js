@@ -35,6 +35,7 @@ app.post('/setdata', (req, res) => {
     console.log(storedData);
     res.status(200).json(data);
 });
+
 app.get('/getdata', (req, res) => {
     const selectedID = req.query.id;
 
@@ -51,21 +52,25 @@ app.get('/getdata', (req, res) => {
             error: 'Data not found',
         });
     }
+
     let filteredData;
-    // 저장된 데이터에서 해당 ID 값과 일치하는 모든 데이터 찾기
+
+    // 저장된 데이터가 배열인 경우에만 filter 사용
     if (Array.isArray(storedData)) {
-        // 배열이라면 filter 사용 가능
-         filteredData = storedData.filter(item => item.id === parseInt(selectedID));
-        // 이후 로직 작성
+        filteredData = storedData.filter(item => item.id === parseInt(selectedID));
+
+        if (filteredData.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'Data not found for the specified ID',
+            });
+        }
     } else {
         // 배열이 아닐 경우에 대한 처리
         console.error('storedData is not an array');
-    }
-
-    if (!filteredData || filteredData.length === 0) {
-        return res.status(404).json({
+        return res.status(500).json({
             status: 'error',
-            error: 'Data not found for the specified ID',
+            error: 'Internal server error - storedData is not an array',
         });
     }
 
