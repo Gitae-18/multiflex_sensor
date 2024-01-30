@@ -24,8 +24,6 @@ app.get('/', (req, res) => {
 app.post('/setdata', (req, res) => {
     const data = req.body;
     //sendData = data;
-    console.log('Received data:', data);
-
     if (!req.body) {
         return res.status(400).json({
             status: 'error',
@@ -34,6 +32,7 @@ app.post('/setdata', (req, res) => {
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
     storedData = JSON.parse(data);
+    console.log(storedData);
     res.status(200).json(data);
 });
 app.get('/getdata', (req, res) => {
