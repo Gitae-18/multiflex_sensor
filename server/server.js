@@ -31,7 +31,7 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    storedData = (data);
+    storedData.push(data);
     res.status(200).json(data);
 });
 
@@ -53,11 +53,18 @@ app.get('/getdata', (req, res) => {
     }
 
     // storedData를 배열로 변환
-  
+    const selectedData = storedData.find(data => data.id === parseInt(selectedID));
+    
     console.log(`storedData:${storedData}`);
 
-    // 찾은 데이터를 클라이언트에 응답
-    res.status(200).json(storedData);
+    if (selectedData) {
+        res.status(200).json(selectedData);
+    } else {
+        res.status(404).json({
+            status: 'error',
+            error: 'Data not found for the specified ID',
+        });
+    }
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
