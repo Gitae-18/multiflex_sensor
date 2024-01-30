@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Plot from "react-plotly.js";
 import './main.css';
-import { text } from "body-parser";
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
   const [receiveData, setReceiveData] = useState([]);
@@ -19,7 +18,6 @@ const AccelerationDisplay = () => {
 };
   const fetchDataFromServer = useCallback(async () => {
     try {
-      setLoading(true);
       const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
         method: 'GET',
         headers: {
@@ -28,12 +26,15 @@ const AccelerationDisplay = () => {
       });
       const data = await response.json();
       setReceivedData(data);
+      if(response.ok){
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
       console.log('데이터를 성공적으로 받았습니다:', data);
     
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
-    } finally {
-      setLoading(false); 
     }
   },[deviceID]);
   useEffect(() => {
@@ -51,9 +52,9 @@ const AccelerationDisplay = () => {
     fetchDataFromServer();
 
 }, [deviceID]); */
-    const textStyle = {
-      color: loading ? 'red' : 'green',
-    };
+const textStyle = {
+  color: loading ? 'red' : 'green',
+};
   return (
     <div>
        <div className="logo">
@@ -67,7 +68,7 @@ const AccelerationDisplay = () => {
                 <option value="4">Sensor-4</option>
                 <option value="5">Sensor-5</option>
           </select>
-          <h4 style={textStyle}>{loading?"connecting...":"connected !"}</h4>
+          <h4>{loading?"connecting...":"connected !"}</h4>
         </div>
           <div className="horizontal-line"/>
           <div style={{padding:'20px 100px'}}>
