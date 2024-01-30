@@ -46,31 +46,25 @@ app.get('/getdata', (req, res) => {
         });
     }
 
-    if (!storedData) {
+    if (!storedData || typeof storedData !== 'object') {
         return res.status(404).json({
             status: 'error',
-            error: 'Data not found',
+            error: 'Data not found or storedData is not an object',
         });
     }
 
+    // storedData를 배열로 변환
+    const dataArray = Object.values(storedData);
+
     let filteredData;
 
-    // 저장된 데이터가 배열인 경우에만 filter 사용
-    if (Array.isArray(storedData)) {
-        filteredData = storedData.filter(item => item.id === parseInt(selectedID));
+    // 배열에서 해당 ID 값과 일치하는 데이터 찾기
+    filteredData = dataArray.filter(item => item.id === parseInt(selectedID));
 
-        if (filteredData.length === 0) {
-            return res.status(404).json({
-                status: 'error',
-                error: 'Data not found for the specified ID',
-            });
-        }
-    } else {
-        // 배열이 아닐 경우에 대한 처리
-        console.error('storedData is not an array');
-        return res.status(500).json({
+    if (filteredData.length === 0) {
+        return res.status(404).json({
             status: 'error',
-            error: 'Internal server error - storedData is not an array',
+            error: 'Data not found for the specified ID',
         });
     }
 
