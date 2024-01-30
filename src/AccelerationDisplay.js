@@ -18,7 +18,12 @@ const AccelerationDisplay = () => {
 };
   const fetchDataFromServer = useCallback(async () => {
     try {
-      const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`);
+      const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const data = await response.json();
       setReceivedData(data);
       if(response.ok){
