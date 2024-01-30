@@ -35,8 +35,11 @@ app.post('/setdata', (req, res) => {
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
     console.log(data);
     
-    (req.body.id) === 1 ? storedData = data : storedData2 = data;
-    
+    if (data.id === 1) {
+        storedData = data;
+    } else if (data.id === 2) {
+        storedData2 = data;
+    }
     res.status(200).json(data);
 });
 
