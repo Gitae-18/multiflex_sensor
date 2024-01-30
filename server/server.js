@@ -61,7 +61,7 @@ app.get('/getdata', (req, res) => {
         {
             dataArray = storedData;
         }
-    } else 
+    } else if(selectedID === 2)
     {
         if(storedData.id === selectedID) {
             dataArray = storedData;
