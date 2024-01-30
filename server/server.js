@@ -63,6 +63,7 @@ app.get('/getdata', (req, res) => {
     // storedData를 배열로 변환
     console.log(selectedID);
     const selectedData = selectedID === 1 ? storedData : selectedID === 2 ? storedData2 : null;
+    console.log(selectedData);
     res.status(200).json(selectedData);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
