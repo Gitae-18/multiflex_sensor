@@ -55,7 +55,8 @@ app.get('/getdata', (req, res) => {
             error: 'ID parameter is missing in the request',
         });
     }
-    const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData;
+    /* const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData; */
+    const selectedData = storedData[selectedID] || {};
     res.status(200).json(selectedData);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
