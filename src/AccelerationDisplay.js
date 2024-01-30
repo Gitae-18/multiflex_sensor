@@ -46,8 +46,7 @@ const AccelerationDisplay = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [receivedData, deviceID]);
-  console.log(deviceID);
+  }, [receivedData, deviceID]); 
   /* useEffect(() => {
     
     fetchDataFromServer();
