@@ -31,7 +31,6 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    console.log(data);
     storedData = data;
     res.status(200).json(data);
 });
@@ -59,8 +58,8 @@ app.get('/getdata', (req, res) => {
     console.log(`storedData:${storedData}`);
 
     if (selectedData) {
-        console.log(selectedData);
-        res.status(200).json(selectedData);
+        console.log(storedData);
+        res.status(200).json(storedData);
     } else {
         res.status(404).json({
             status: 'error',
