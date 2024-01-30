@@ -13,7 +13,7 @@ app.post('/', (req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
-let storedData = null;
+let storedData = [];
 //let storedRsData = null;
 //let filteredData = null;
 app.get('/', (req, res) => {
@@ -55,24 +55,9 @@ app.get('/getdata', (req, res) => {
     // storedData를 배열로 변환
   
     console.log(`storedData:${storedData}`);
-    const array = Object.values(storedData);
-    console.log(typeof(array));
-    let dataArray;
-    if(selectedID === 1) {
-        if(storedData.id === selectedID)
-        {
-            dataArray = Object.values(storedData);
-        }
-    } else if(selectedID === 2)
-    {
-        if(storedData.id === selectedID) {
-            dataArray = Object.values(storedData);
-        }
-    }
-    console.log(`dataArray:${dataArray}`);
 
     // 찾은 데이터를 클라이언트에 응답
-    res.status(200).json(dataArray);
+    res.status(200).json(storedData);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
