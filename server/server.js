@@ -34,12 +34,8 @@ app.post('/setdata', (req, res) => {
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
     console.log(data);
-    if(ID === 1){
-        storedData = data.map((item) => item.id === 1);
-    }
-    if(ID === 2){
-        storedData = data.map((item) => item.id === 2);
-    }
+    
+    (req.body.id) === 1 ? storedData = data : storedData2 = data;
     
     res.status(200).json(data);
 });
@@ -62,7 +58,7 @@ app.get('/getdata', (req, res) => {
     }
  */
     // storedData를 배열로 변환
-    const selectedData = storedData.id === 1 ? storedData : storedData2
+    const selectedData = selectedID === 1 ? storedData : storedData2
     res.status(200).json(selectedData);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
