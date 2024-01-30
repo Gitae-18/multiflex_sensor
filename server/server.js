@@ -33,12 +33,13 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    if(ID === 1){
+    console.log(ID);
+    /* if(ID === 1){
         storedData = data.map((item) => item.id === 1);
     }
     if(ID === 2){
         storedData = data.map((item) => item.id === 2);
-    }
+    } */
     
     res.status(200).json(data);
 });
