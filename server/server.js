@@ -56,16 +56,16 @@ app.get('/getdata', (req, res) => {
     const selectedData = storedData.filter(data => data.id === selectedID);
 
     console.log(`storedData:${storedData}`);
-
-    if (selectedData) {
+    res.status(200).json(selectedData);
+    /* if (selectedData) {
         console.log(storedData);
-        res.status(200).json(selectedData);
+       
     } else {
         res.status(404).json({
             status: 'error',
             error: 'Data not found for the specified ID',
         });
-    }
+    } */
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
