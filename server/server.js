@@ -59,12 +59,12 @@ app.get('/getdata', (req, res) => {
     if(selectedID === 1) {
         if(storedData.id === selectedID)
         {
-            dataArray = storedData;
+            dataArray = Object.entries(storedData).map(([key, value]) => value);
         }
     } else if(selectedID === 2)
     {
         if(storedData.id === selectedID) {
-            dataArray = storedData;
+            dataArray = Object.entries(storedData).map(([key, value]) => value);
         }
     }
     console.log(`dataArray:${dataArray}`);
