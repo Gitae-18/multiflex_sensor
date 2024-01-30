@@ -13,12 +13,12 @@ app.post('/', (req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
-let storedData = {};
-let storedData2 = {};
 app.get('/', (req, res) => {
     console.log('success');
     res.send('Hello, this is the root path!');
 });
+let storedData = {};
+let storedData2 = {};
 
 app.post('/setdata', (req, res) => {
     const data = req.body;
@@ -37,11 +37,12 @@ app.post('/setdata', (req, res) => {
             error: '올바르지 않은 데이터 형식입니다. 요청 본문에 "id" 속성이 포함되어 있는지 확인하세요.',
         });
     }
-    if (data.id === 1) {
+    /* if (data.id === 1) {
         storedData = data;
     } else if (data.id === 2) {
         storedData2 = data;
-    }
+    } */
+    storedData[data.id] = data;
     res.status(200).json(data);
 });
 
@@ -54,18 +55,7 @@ app.get('/getdata', (req, res) => {
             error: 'ID parameter is missing in the request',
         });
     }
-
-/*     if (!storedData || !Array.isArray(storedData)) {
-        return res.status(404).json({
-            status: 'error',
-            error: 'Data not found or storedData is not an array',
-        });
-    }
- */
-    // storedData를 배열로 변환
-    console.log(selectedID);
     const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData;
-    console.log(selectedData);
     res.status(200).json(selectedData);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
