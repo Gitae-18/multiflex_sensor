@@ -13,10 +13,8 @@ app.post('/', (req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
-let storedData = null;
-let storedData2 = null;
-//let storedRsData = null;
-//let filteredData = null;
+let storedData = {};
+let storedData2 = {};
 app.get('/', (req, res) => {
     console.log('success');
     res.send('Hello, this is the root path!');
@@ -33,8 +31,12 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    console.log(data);
-    
+    if (!data || !data.id) {
+        return res.status(400).json({
+            status: 'error',
+            error: '올바르지 않은 데이터 형식입니다. 요청 본문에 "id" 속성이 포함되어 있는지 확인하세요.',
+        });
+    }
     if (data.id === 1) {
         storedData = data;
     } else if (data.id === 2) {
@@ -62,7 +64,7 @@ app.get('/getdata', (req, res) => {
  */
     // storedData를 배열로 변환
     console.log(selectedID);
-    const selectedData = selectedID === 1 ? storedData : selectedID === 2 ? storedData2 : storedData;
+    const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData;
     console.log(selectedData);
     res.status(200).json(selectedData);
 });
