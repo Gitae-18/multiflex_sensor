@@ -32,7 +32,6 @@ app.post('/setdata', (req, res) => {
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
     storedData = (data);
-    console.log(storedData);
     res.status(200).json(data);
 });
 
@@ -60,7 +59,7 @@ app.get('/getdata', (req, res) => {
 
     // 배열에서 해당 ID 값과 일치하는 데이터 찾기
     filteredData = dataArray.filter(item => item.id === parseInt(selectedID));
-
+    console.log(filteredData);
     if (filteredData.length === 0) {
         return res.status(404).json({
             status: 'error',
