@@ -14,6 +14,7 @@ app.post('/', (req, res, next) => {
     next();
   });
 let storedData = null;
+let storedData2 = null;
 //let storedRsData = null;
 //let filteredData = null;
 app.get('/', (req, res) => {
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 
 app.post('/setdata', (req, res) => {
     const data = req.body;
+    const ID = req.body.id;
     //sendData = data;
     if (!req.body) {
         return res.status(400).json({
@@ -31,7 +33,13 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    storedData = data;
+    if(ID === 1){
+        storedData = data.filter((item) => item.id === 1);
+    }
+    if(ID === 2){
+        storedData = data.filter((item) => item.id === 2);
+    }
+    
     res.status(200).json(data);
 });
 
@@ -53,21 +61,8 @@ app.get('/getdata', (req, res) => {
     }
  */
     // storedData를 배열로 변환
-    console.log(storedData.id);
-    console.log(selectedID);
-
-    const selectedData = storedData.id === parseInt(selectedID) ? storedData : null 
-    console.log(`storedData:${storedData}`);
+    const selectedData = storedData.id === 1 ? storedData : storedData2
     res.status(200).json(selectedData);
-    /* if (selectedData) {
-        console.log(storedData);
-       
-    } else {
-        res.status(404).json({
-            status: 'error',
-            error: 'Data not found for the specified ID',
-        });
-    } */
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
