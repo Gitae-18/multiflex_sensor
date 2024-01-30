@@ -53,10 +53,10 @@ app.get('/getdata', (req, res) => {
     }
 
     // storedData를 배열로 변환
-    console.log(`storedData:${storedData}`);
+  
     console.log(`id:${selectedID}`);
     const dataArray = Object.values(storedData);
-
+    console.log(`storedData:${dataArray}`);
     let filteredData;
 
     // 배열에서 해당 ID 값과 일치하는 데이터 찾기
