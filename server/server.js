@@ -53,12 +53,12 @@ app.get('/getdata', (req, res) => {
     }
 
     // storedData를 배열로 변환
-    const selectedData = storedData.find(data => data.id === parseInt(selectedID));
+    const selectedData = storedData.filter(data => data.id === selectedID);
 
-    console.log(`storedData: ${JSON.stringify(storedData)}`);
+    console.log(`storedData:${storedData}`);
 
     if (selectedData) {
-        console.log(`selectedData: ${JSON.stringify(selectedData)}`);
+        console.log(storedData);
         res.status(200).json(selectedData);
     } else {
         res.status(404).json({
