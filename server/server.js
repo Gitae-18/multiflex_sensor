@@ -32,7 +32,7 @@ app.post('/setdata', (req, res) => {
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
     console.log(data);
-    storedData.push(data);
+    storedData = data;
     res.status(200).json(data);
 });
 
