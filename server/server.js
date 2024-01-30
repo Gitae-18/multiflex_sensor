@@ -13,7 +13,7 @@ app.post('/', (req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
-let storedData = [];
+let storedData = null;
 //let storedRsData = null;
 //let filteredData = null;
 app.get('/', (req, res) => {
@@ -45,13 +45,13 @@ app.get('/getdata', (req, res) => {
         });
     }
 
-    if (!storedData || !Array.isArray(storedData)) {
+/*     if (!storedData || !Array.isArray(storedData)) {
         return res.status(404).json({
             status: 'error',
             error: 'Data not found or storedData is not an array',
         });
     }
-
+ */
     // storedData를 배열로 변환
     const selectedData = storedData.filter(data => data.id === selectedID);
 
