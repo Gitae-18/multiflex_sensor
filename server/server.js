@@ -33,7 +33,7 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    storedData = data;
+    storedData = JSON.parse(data);
     res.status(200).json(data);
 });
 app.get('/getdata', (req, res) => {
@@ -52,9 +52,16 @@ app.get('/getdata', (req, res) => {
             error: 'Data not found',
         });
     }
-
+    let filteredData;
     // 저장된 데이터에서 해당 ID 값과 일치하는 모든 데이터 찾기
-    const filteredData = storedData.filter(item => item.id === parseInt(selectedID));
+    if (Array.isArray(storedData)) {
+        // 배열이라면 filter 사용 가능
+         filteredData = storedData.filter(item => item.id === parseInt(selectedID));
+        // 이후 로직 작성
+    } else {
+        // 배열이 아닐 경우에 대한 처리
+        console.error('storedData is not an array');
+    }
 
     if (!filteredData || filteredData.length === 0) {
         return res.status(404).json({

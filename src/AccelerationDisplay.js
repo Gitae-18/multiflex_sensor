@@ -21,7 +21,7 @@ const AccelerationDisplay = () => {
       const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+         'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
