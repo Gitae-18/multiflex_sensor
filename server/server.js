@@ -31,6 +31,7 @@ app.post('/setdata', (req, res) => {
         });
     }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
+    console.log(data);
     storedData.push(data);
     res.status(200).json(data);
 });
@@ -45,16 +46,16 @@ app.get('/getdata', (req, res) => {
         });
     }
 
-    if (!storedData || typeof storedData !== 'object') {
+    if (!storedData || !Array.isArray(storedData)) {
         return res.status(404).json({
             status: 'error',
-            error: 'Data not found or storedData is not an object',
+            error: 'Data not found or storedData is not an array',
         });
     }
 
     // storedData를 배열로 변환
     const selectedData = storedData.find(data => data.id === parseInt(selectedID));
-    
+
     console.log(`storedData:${storedData}`);
 
     if (selectedData) {
