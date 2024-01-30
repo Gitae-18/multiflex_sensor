@@ -56,7 +56,7 @@ app.get('/getdata', (req, res) => {
   
     console.log(`storedData:${storedData}`);
     const array = Object.values(storedData);
-    console.log(array);
+    console.log(typeof(array));
     let dataArray;
     if(selectedID === 1) {
         if(storedData.id === selectedID)
