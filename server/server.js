@@ -37,9 +37,8 @@ app.post('/setdata', (req, res) => {
     res.status(200).json(data);
 });
 app.get('/getdata', (req, res) => {
-
     const id = req.query.id;
-    console.log(storedData);
+
     if (!id) {
         return res.status(400).json({
             status: 'error',
@@ -53,17 +52,20 @@ app.get('/getdata', (req, res) => {
             error: 'Data not found',
         });
     }
+
+    // 저장된 데이터에서 해당 ID 값과 일치하는 데이터 찾기
     const filteredData = storedData.find(item => item.id === parseInt(id));
+
     if (!filteredData) {
         return res.status(404).json({
             status: 'error',
             error: 'Data not found for the specified ID',
         });
     }
-    // 저장된 데이터를 클라이언트에 응답
+
+    // ID 값이 일치하는 경우에만 클라이언트에 응답
     res.status(200).json(filteredData);
 });
-
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
 // 메인페이지 접속 시 build 폴더의 index.html 보내줘
