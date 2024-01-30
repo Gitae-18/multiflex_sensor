@@ -55,24 +55,12 @@ app.get('/getdata', (req, res) => {
     // storedData를 배열로 변환
   
     console.log(`id:${selectedID}`);
-    console.log(storedData.id);
-    const dataArray = Object.values(storedData);
+    
+    const dataArray = storedData.id === selectedID ? storedData : null;
     console.log(`storedData:${dataArray}`);
-    let filteredData;
-
-    // 배열에서 해당 ID 값과 일치하는 데이터 찾기
-
-//    console.log(filteredData);
-    //console.log(filteredData);
-    if (filteredData.length === 0) {
-        return res.status(404).json({
-            status: 'error',
-            error: 'Data not found for the specified ID',
-        });
-    }
 
     // 찾은 데이터를 클라이언트에 응답
-    res.status(200).json(filteredData);
+    res.status(200).json(dataArray);
 });
 /* app.use(express.static(path.join(__dirname, '/build')));
  */
