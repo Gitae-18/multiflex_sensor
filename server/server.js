@@ -53,13 +53,15 @@ app.get('/getdata', (req, res) => {
     }
 
     // storedData를 배열로 변환
+    console.log(`storedData:${storedData}`);
+    console.log(`id:${selectedID}`);
     const dataArray = Object.values(storedData);
 
     let filteredData;
 
     // 배열에서 해당 ID 값과 일치하는 데이터 찾기
     filteredData = dataArray.filter(item => item.id === parseInt(selectedID));
-    console.log(filteredData);
+    //console.log(filteredData);
     if (filteredData.length === 0) {
         return res.status(404).json({
             status: 'error',
