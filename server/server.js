@@ -60,6 +60,7 @@ app.get('/getdata', (req, res) => {
     let filteredData;
 
     // 배열에서 해당 ID 값과 일치하는 데이터 찾기
+    console.log(typeof(dataArray));
     console.log(dataArray.id);
 //    console.log(filteredData);
     //console.log(filteredData);
