@@ -55,8 +55,18 @@ app.get('/getdata', (req, res) => {
     // storedData를 배열로 변환
   
     console.log(`id:${selectedID}`);
-    
-    const dataArray = storedData.id === selectedID ? storedData : null;
+    let dataArray;
+    if(selectedID === 1) {
+        if(storedData.id === selectedID)
+        {
+            dataArray = storedData;
+        }
+    } else 
+    {
+        if(storedData.id === selectedID) {
+            dataArray = storedData;
+        }
+    }
     console.log(`storedData:${dataArray}`);
 
     // 찾은 데이터를 클라이언트에 응답
