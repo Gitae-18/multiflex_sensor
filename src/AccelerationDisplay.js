@@ -19,10 +19,10 @@ const AccelerationDisplay = () => {
 };
   const fetchDataFromServer = useCallback(async () => {
     try {
-      if (deviceID !== prevDeviceID) {
+     /*  if (deviceID !== prevDeviceID) {
         setLoading(true);
         setPrevDeviceID(deviceID); // 현재 deviceID를 저장
-      }
+      } */
       const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
         method: 'GET',
         headers: {
@@ -35,13 +35,13 @@ const AccelerationDisplay = () => {
     
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
-    } finally {
+    } /* finally {
       setLoading(false); // 데이터 수신 후 loading 비활성화
-    }
+    } */
   },[deviceID]);
   useEffect(() => {
 
-      const id = setInterval(fetchDataFromServer, 3000);
+      const id = setInterval(fetchDataFromServer, 1000);
 
       setIntervalId(id);
 
@@ -54,9 +54,6 @@ const AccelerationDisplay = () => {
     fetchDataFromServer();
 
 }, [deviceID]); */
-const textStyle = {
-  color: loading ? 'red' : 'green',
-};
   return (
     <div>
        <div className="logo">
@@ -70,8 +67,8 @@ const textStyle = {
                 <option value="4">Sensor-4</option>
                 <option value="5">Sensor-5</option>
           </select>
-          <h4>{loading?"connecting...":"connected !"}</h4>
         </div>
+         {/* <h4>{loading?"connecting...":"connected !"}</h4> */}
           <div className="horizontal-line"/>
           <div style={{padding:'20px 100px'}}>
           {receivedData && (
