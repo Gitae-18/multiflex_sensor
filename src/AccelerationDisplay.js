@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Plot from "react-plotly.js";
 import './main.css';
-import { text } from "body-parser";
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
   const [receiveData, setReceiveData] = useState([]);
+  const [prevDeviceID, setPrevDeviceID] = useState("");
   const [loading, setLoading] = useState(false);
   const [deviceID, setDeviceID] = useState("1");
 
@@ -19,7 +19,10 @@ const AccelerationDisplay = () => {
 };
   const fetchDataFromServer = useCallback(async () => {
     try {
-      setLoading(true);
+      if (deviceID !== prevDeviceID) {
+        setLoading(true);
+        setPrevDeviceID(deviceID); // 현재 deviceID를 저장
+      }
       const response = await fetch(`http://feelink.iptime.org:5001/getdata?id=${deviceID}`,{
         method: 'GET',
         headers: {
@@ -33,7 +36,7 @@ const AccelerationDisplay = () => {
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
     } finally {
-      setLoading(false); 
+      setLoading(false); // 데이터 수신 후 loading 비활성화
     }
   },[deviceID]);
   useEffect(() => {
@@ -51,9 +54,9 @@ const AccelerationDisplay = () => {
     fetchDataFromServer();
 
 }, [deviceID]); */
-    const textStyle = {
-      color: loading ? 'red' : 'green',
-    };
+const textStyle = {
+  color: loading ? 'red' : 'green',
+};
   return (
     <div>
        <div className="logo">
@@ -67,7 +70,7 @@ const AccelerationDisplay = () => {
                 <option value="4">Sensor-4</option>
                 <option value="5">Sensor-5</option>
           </select>
-          <h4 style={textStyle}>{loading?"connecting...":"connected !"}</h4>
+          <h4>{loading?"connecting...":"connected !"}</h4>
         </div>
           <div className="horizontal-line"/>
           <div style={{padding:'20px 100px'}}>
