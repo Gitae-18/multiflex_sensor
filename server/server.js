@@ -53,6 +53,7 @@ app.get('/getdata', (req, res) => {
     }
  */
     // storedData를 배열로 변환
+    console.log(typeof(selectedID))
     const selectedData = storedData.filter(data => data.id === selectedID);
 
     console.log(`storedData:${storedData}`);
