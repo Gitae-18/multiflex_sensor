@@ -175,7 +175,7 @@ console.log(typeof(receiveData))
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">황화수소</div>
-          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.h2s > 400  ? "-" : receivedData.h2s} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.h2s > 400 || receivedData.h2s < 0 ? "-" : receivedData.h2s} ppm</div>
           </div>
           </div>
           <div className="sensor-card">
