@@ -31,7 +31,9 @@ const AccelerationDisplay = () => {
       });
       const data = await response.json();
       setReceivedData(data);
+      if(response.ok){
       console.log('데이터를 성공적으로 받았습니다:', data);
+      }
     
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);

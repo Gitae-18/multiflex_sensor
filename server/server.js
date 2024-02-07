@@ -30,18 +30,21 @@ app.post('/setdata', (req, res) => {
             error: 'req body cannot be empty',
         });
     }
+    if (!data) {
+        // 데이터가 전송되지 않은 경우 storedData를 비우고 에러 메시지를 반환
+        storedData = {};
+        return res.status(400).json({
+            status: 'error',
+            error: '데이터가 전송되지 않았습니다. 연결이 끊겼습니다.',
+        });
+    }
     // 여기에서 React 서버에 데이터 전달 등의 작업 수행
-    if (!data || !data.id) {
+    if (!data && !data.id) {
         return res.status(400).json({
             status: 'error',
             error: '올바르지 않은 데이터 형식입니다. 요청 본문에 "id" 속성이 포함되어 있는지 확인하세요.',
         });
     }
-    /* if (data.id === 1) {
-        storedData = data;
-    } else if (data.id === 2) {
-        storedData2 = data;
-    } */
     storedData[data.id] = data;
     res.status(200).json(data);
 });
