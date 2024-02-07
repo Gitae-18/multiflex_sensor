@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <curl/curl.h>
-
 #define SPI_MAX_CLOCK_HZ 8000000
 #define SPI_MODE 0
 
@@ -17,7 +16,8 @@
 
 #define DEVICE "/dev/ttyAMA2"
 #define BAUD_RATE 9600
-// adxl357 환경변수
+#define ID 2
+
 #define RS485_ENABLE_PIN 7
 #define HIGH 1
 #define LOW 0
@@ -40,7 +40,7 @@
 #define RID 0x00
 #define RFIFOENTRIES 0x05
 #define POWER_CTL 0x2D
-
+//shadow reg
 #define SREG0 0x50
 #define SREG1 0x51
 #define SREG2 0x52
@@ -72,10 +72,40 @@
 #define STOP 0x01
 #define CALI_BUF_LEN 15
 #define CALI_INTERVAL_TIME 250
-#define CHIP_SELECT_PIN  11
+#define CHIP_SELECT_PIN  14
 
-//spi 설정변수 선언
 int spi_handle;
+
+void initSPI() {
+    if (gpioInitialise() < 0) {
+        fprintf(stderr, "Failed to initialize pigpio\n");
+        exit(1);
+    }
+
+    spi_handle = spiOpen(SPI_BUS, SPI_MAX_CLOCK_HZ, SPI_MODE); 
+    if (spi_handle < 0) {
+        fprintf(stderr, "Failed to open SPI bus\n");
+        exit(1);
+    }
+
+    gpioSetMode(CHIP_SELECT_PIN, PI_OUTPUT);
+}
+
+void write_data(uint8_t address, uint8_t value) {
+    uint8_t dataToSend[] = {(address << 1) | WRITE_BIT, value};
+	gpioWrite(CHIP_SELECT_PIN, LOW);
+    spiWrite(spi_handle, (char *)dataToSend, sizeof(dataToSend));
+	gpioWrite(CHIP_SELECT_PIN, HIGH);
+}
+
+uint8_t read_data(uint8_t address) {
+    uint8_t dataToSend = (address << 1) | READ_BIT;
+    uint8_t dataReceived;
+	gpioWrite(CHIP_SELECT_PIN, LOW);
+    spiXfer(spi_handle, (char *)&dataToSend, (char *)&dataReceived, 2);
+	gpioWrite(CHIP_SELECT_PIN, HIGH);
+    return dataReceived;
+}
 
 void start()
 {
@@ -89,26 +119,6 @@ void reset()
 {
 	write_data(0x2F,0x52);
 }
-
-void write_data(uint8_t address, uint8_t value) {
-
-    uint8_t dataToSend[] = {(address << 1) | WRITE_BIT, value};
-	gpioWrite(CHIP_SELECT_PIN, LOW);
-    spiWrite(spi_handle, (char *)dataToSend, sizeof(dataToSend));
-	gpioWrite(CHIP_SELECT_PIN, HIGH);
-}
-
-uint8_t read_data(uint8_t address) {
-
-    uint8_t dataToSend = (address << 1) | READ_BIT;
-    uint8_t dataReceived;
-	gpioWrite(CHIP_SELECT_PIN, LOW);
-    spiXfer(spi_handle, (char *)&dataToSend, (char *)&dataReceived, 2);
-	gpioWrite(CHIP_SELECT_PIN, HIGH);
-
-    return dataReceived;
-}
-
 void set_range(uint8_t range) {
 
 	switch (range)
@@ -124,8 +134,8 @@ void set_range(uint8_t range) {
 }
 
 
-void get_axes(double *x, double *y, double *z) {
-
+void get_axes(double *x, double *y, double *z)
+{
 	uint8_t axisAddress = XDATA3;
 
 	uint8_t axisMeasures[10];
@@ -168,181 +178,235 @@ void get_axes(double *x, double *y, double *z) {
 
 //	printf("X_axis : %.3f Y_axis: %.3f Z_axis : %.3f\n", xr, yr, zr);
 }
-// 485 Command 전송
-void sendData(int serialPort, unsigned char* data, int length) {
+void setFilter(uint8_t hpf, uint8_t lpf) {
+    write_data(0x28, (hpf << 4) | lpf);
+}
 
+int readDump(uint8_t reg, uint8_t *buf, int len) {
+    uint8_t sendBuf[len + 1];
+    sendBuf[0] = reg | 0x01;
+
+    gpioWrite(CHIP_SELECT_PIN, PI_LOW);
+
+    spiXfer(spi_handle, (char*)sendBuf, (char*)sendBuf, len + 1);
+
+    gpioWrite(CHIP_SELECT_PIN, PI_HIGH);
+
+    memcpy(buf, sendBuf + 1, len);
+
+    return 1;
+}
+void dumpInfo() {
+    printf("ADXL357 SPI Info Dump\n");
+
+    uint8_t buf[64];
+
+    if (readDump(REG_DEVID_AD, buf, 3)) {
+        printf("Analog Devices ID: %#02x\n", buf[0]);
+        printf("Analog Devices MEMS ID: %#02x\n", buf[1]);
+        printf("Device ID: %#02x\n", buf[2]);
+    } else {
+        printf("Reading ID Registers Failed!\n");
+    }
+
+    if (readDump(POWER_CTL, buf, 1)) {
+        printf("Power Control Status:%d %s\n", buf[0], buf[0] & STOP ? "--> Standby" : "--> Measurement Mode");
+    } else {
+        printf("Reading Power CTL Failed !\n");
+    }
+}
+
+void sendData(int serialPort, unsigned char* data, int length) {
 	 gpioSetMode(RS485_ENABLE_PIN, PI_OUTPUT);
 	 gpioWrite(RS485_ENABLE_PIN, HIGH);
 	 serWrite(serialPort, data, length);
 	 usleep(length * 10000000/9600);
 	 gpioWrite(RS485_ENABLE_PIN, LOW);
 }
-// 복합센서 ommand 전송
 void sendSerialData(int serialPort,  char* data, int length) {
-
-		//write(serialPort, data, length);
+//	write(serialPort, data, length);
         serWrite(serialPort, data, length);
-        printf("Data sent successfully\n");
 }
+struct MemoryStruct {
+    char *memory;
+    size_t size;
+};
 
-int main()
-{
+size_t write_to_memory_callback(void *buffer, size_t size, size_t nmemb, void *userp) {
+
+    size_t realsize = size * nmemb;
+    struct MemoryStruct *mem = (struct MemoryStruct *) userp;
+    char *ptr = (char *) realloc(mem->memory, mem->size + realsize + 1);
+
+    if(!ptr) {
+        printf("not enough memory (realloc returned NULL)\n");
+        return 0;
+    }
+
+    mem->memory = ptr;
+    memcpy(&(mem->memory[mem->size]), buffer, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
+
+    return realsize;
+}
+int main(){
 	CURL *curl;
 	CURLcode res;
 	curl = curl_easy_init();
-
-	//curl 활성화
 	if(!curl){
 		fprintf(stderr,"CURL initialize failed\n");
 		return 1;
 	}
-	// pigpio 활성화
 	if(gpioInitialise() < 0) {
 		fprintf(stderr, "Unable to initialize\n");
 		return 1;
 	}
-
-	// spi 활성화
 	spi_handle = spiOpen(SPI_DEVICE, SPI_MAX_CLOCK_HZ, SPI_MODE);
-	// 485 화재센서
 	int serialPort = serOpen("/dev/ttyAMA3", 9600,0);
-
 	gpioSetMode(RS485_ENABLE_PIN,PI_OUTPUT);
+
+	set_range(SET_RANGE_40G);
+
+	setFilter(0x00, 0x03);
 
 	if(serialPort == -1) {
 		fprintf(stderr, "Unable to open");
 		return 1;
 	}
-	//복합센서 uart3
 	int serial_port = serOpen("/dev/ttyAMA2", 9600, 0);
 
 	if (serial_port < 0) {
 	         fprintf(stderr, "Unable to open serial port: %s\n", strerror(errno));
 	         return 1;
 	} else {
-         printf("Serial port opened successfully\n");
+	         printf("Serial port opened successfully\n");
 	}
-	//황화수소센서 uart2
-    int sensorPort = serOpen("/dev/ttyAMA1", 9600, 0);
 
+        int sensorPort = serOpen("/dev/ttyAMA1", 9600, 0);
 	if (sensorPort < 0) {
-	    fprintf(stderr, "Serial port opening failed\n");
-	    return -1;
+	        fprintf(stderr, "Serial port opening failed\n");
+	        return -1;
 	}
-
-    char buffer[100];
-    char sensorDataString[512];
-    unsigned char command[] = {ZPHS01B_ADDR, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
-    unsigned char data[] = {0x53, 0x00, 0x0C, 0x05, 0x01, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14, 0x45};
-    unsigned char sensor[] = {0xFF, 0x86, 0x00, 0x00, 0x00, 0x06, 0x02, 0x02, 0x03};
-    unsigned char receivedSensor[50];
-//  unsigned char receivedData[100];
+	char buffer[100];
+	char sensorDataString[512];
+        unsigned char command[] = {ZPHS01B_ADDR, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
+//        int arrayLength = sizeof(command) / sizeof(command[0]);
+	unsigned char data[] = {0x53, 0x00, 0x0C, 0x05, 0x01, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14, 0x45};
+//	int data_length = sizeof(data) / sizeof(data[0]);
+	unsigned char sensor[] = {0xFF, 0x86, 0x00, 0x00, 0x00, 0x06, 0x02, 0x02, 0x03};
+	unsigned char receivedSensor[50];
+//    unsigned char receivedData[100];
 	while(1) {
-		
-		    	sendData(serialPort, data, sizeof(data));
-	            	time_sleep(0.5);
-		    	sendSerialData(serial_port, command, sizeof(command));
-	             	time_sleep(0.5); 
-		    	serWrite(serialPort, command, sizeof(sensor));
-		     		time_sleep(0.5);
-		    	unsigned char receivedData[100];
-		    	int count = 26;
-		    		for(int i = 0; i < count; i++) {
-						receivedData[i] = serReadByte(serialPort);
-		    		}
-					time_sleep(0.5);
-		    	char data[26];
-		            for (int i = 0; i < 26; i++) {
-	                	data[i] = serReadByte(serial_port);
-        	    	}
-					time_sleep(0.5);
-		    		for (int i = 0; i < 9; i++) {
-		        		receivedSensor[i] = serReadByte(sensorPort);
-	            	}
-					//485 화재센서 데이터
-					int opStateMSB = receivedData[8];
-					int opStateLSB = receivedData[9];
-					int opState = (opStateMSB << 8) | opStateLSB;
-					int bit2 = (opState >> 1)&1;
-					int bit3 = (opState >> 1)&1;
+		    sendData(serialPort, data, sizeof(data));
+	             time_sleep(0.5);
+		    sendSerialData(serial_port, command, sizeof(command));
+	             time_sleep(0.5); 
+		    serWrite(serialPort, sensor, sizeof(sensor));
+		     time_sleep(0.5);
+		    unsigned char receivedData[100];
+		    int count = 26;
+		    for(int i = 0; i < count; i++) {
+			receivedData[i] = serReadByte(serialPort);
+		    }
+			time_sleep(0.5);
+		    char data[26];
+	            for (int i = 0; i < 26; i++) {
+	                data[i] = serReadByte(serial_port);
+        	    }
+			time_sleep(0.5);
+		    for (int i = 0; i < 9; i++) {
+		        receivedSensor[i] = serReadByte(sensorPort);
+	            }
 
-					int warningTempMSB = receivedData[15];
-					int warningTempLSB = receivedData[16];
-					int warningTemp = (warningTempMSB << 8) | warningTempLSB;
+		int opStateMSB = receivedData[8];
+		int opStateLSB = receivedData[9];
+		int opState = (opStateMSB << 8) | opStateLSB;
+		int bit2 = (opState >> 1)&1;
+		int bit3 = (opState >> 1)&1;
 
-					int alarmTempMSB = receivedData[17];
-					int alarmTempLSB = receivedData[18];
-					int alarmTemp = (alarmTempMSB << 8) | alarmTempLSB;
-					
-					double warningT = (double)warningTemp / 100.0;
-					double alarmT = (double)alarmTemp / 100.0;
-					// 복합센서 데이터 포맷에 따라 할당
-					double temp = ((data[11] * 256 + data[12]) - 500) * 0.1;
-					double humi = data[13] * 256 + data[14];
-					double pm25 = (data[4] * 256 + data[5]) / 10.0;
-					double pm10 =  (data[6] * 256 + data[7]) / 10.0;
-					double pm1 = (data[2] * 256 + data[3]) /10.0;
-					double co2 = (data[8] * 256 + data[9]);
-					double voc = data[10];
-					double ch2o = (data[15] * 256 + data[16]) * 0.0001/10.0;
-					double co = (data[17] * 256 + data[18]) * 0.1;
-					double o3 = (data[19] * 256 + data[20]) * 0.1;
-					double no2 = (data[21] * 256 + data[22]) * 0.1;
-					// 황화수소 데이터
-					double h2sData = (receivedSensor[2] * 256 + receivedSensor[3]) / 10;
-					time_sleep(0.5); // 지연시간 0.5 sec
-					// adxl 진동센서 값 호출
-					double xr,yr,zr;
-					get_axes(&xr, &yr, &zr);
-					// 모든 센서값 배열에 할당
-					double dataToSet[] = {temp, humi, pm25, pm10, pm1, co2, voc, ch2o, co, o3, no2, xr, yr, zr, h2sData, warningT, alarmT};
-					// 배열 size구하기
-					int numVal = sizeof(dataToSet) / sizeof(dataToSet[0]);
-					// 데이터값 문자열로 치환
-					snprintf(sensorDataString, sizeof(sensorDataString),
-							"{\"temp\":%.2f, \"humidity\":%.2f,\"pm25\":%.2f,\"pm10\":%.2f,"
-							"\"pm1\": %.2f, \"co2\": %.0f, \"voc\": %.0f, \"ch2o\":  %.3f, \"co\": %.3f, \"o3\": %.3f,"
-							"\"no2\": %.3f, \"x\": %.3f, \"y\": %.3f, \"z\": %.3f,  \"h2s\": %.0f, \"wargningTemp\": %.1f, \"alarmTemp\": %.1f}",
-							temp, humi, pm25, pm10, pm1, co2, voc, ch2o, co, o3, no2, xr, yr, zr, h2sData, warningT, alarmT);
+/*	        int tempMSB = receivedData[11];
+	        int tempLSB = receivedData[12];
+        	int temperature = (tempMSB << 8) | tempLSB;
 
-					fflush(stdout); // 버퍼 비우기
-					usleep(100); // 0.1 sec Delay
+	        int humiMSB = receivedData[13];
+	        int humiLSB = receivedData[14];
+        	int humidity = (humiMSB << 8) | humiLSB;*/
 
-					// 데이터 rest api로  전송 curl library 사용
-					if(curl) { // check curl != NUll
+	        int warningTempMSB = receivedData[15];
+	        int warningTempLSB = receivedData[16];
+	        int warningTemp = (warningTempMSB << 8) | warningTempLSB;
 
-						struct curl_slist *headers = NULL;	// header선언 , curl_slist는 libcurl에서 링크드 리스트를 나타내는 구조체
+	        int alarmTempMSB = receivedData[17];
+	        int alarmTempLSB = receivedData[18];
+	        int alarmTemp = (alarmTempMSB << 8) | alarmTempLSB;
 
-						headers = curl_slist_append(headers, "Content-Type: application/json");  //HTTP 요청 헤더에 "Content-Type: application/json"을 추가
+		double warningT = (double)warningTemp / 100.0;
+		double alarmT = (double)alarmTemp / 100.0;
 
-						curl_easy_setopt(curl, CURLOPT_URL, "http://feelink.iptime.org:5001/setdata"); //"http://192.168.0.36:4001/setdata" URL로 요청
+	        double temp = ((data[11] * 256 + data[12]) - 500) * 0.1;
+		double humi = data[13] * 256 + data[14];
+                double pm25 = (data[4] * 256 + data[5]) / 10.0;
+                double pm10 =  (data[6] * 256 + data[7]) / 10.0;
+                double pm1 = (data[2] * 256 + data[3]) /10.0;
+                double co2 = (data[8] * 256 + data[9]);
+		double voc = data[10];
+                double ch2o = (data[15] * 256 + data[16]) * 0.0001/10.0;
+                double co = (data[17] * 256 + data[18]) * 0.1;
+                double o3 = (data[19] * 256 + data[20]) * 0.1;
+                double no2 = (data[21] * 256 + data[22]) * 0.1;
 
-						curl_easy_setopt(curl, CURLOPT_POST, 1L); //HTTP POST 요청 방식을 사용하도록 설정 L = long type;
+		double h2sData = (receivedSensor[2] * 256 + receivedSensor[3]) / 10;
+		time_sleep(0.5);
+		double xr,yr,zr;
+		get_axes(&xr, &yr, &zr);
+		double dataToSet[] = {temp, humi, pm25, pm10, pm1, co2, voc, ch2o, co, o3, no2, xr, yr, zr, h2sData, warningT, alarmT};
 
-						curl_easy_setopt(curl, CURLOPT_POSTFIELDS, sensorDataString); // send data 설정
+		int numVal = sizeof(dataToSet) / sizeof(dataToSet[0]);
 
-						curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); //요청에 header포함
+		 snprintf(sensorDataString, sizeof(sensorDataString),
+	            "{\"id\": 2,\"temp\":%.2f, \"humidity\":%.2f,\"pm25\":%.2f,\"pm10\":%.2f,"
+	            "\"pm1\": %.2f, \"co2\": %.0f, \"voc\": %.0f, \"ch2o\":  %.3f, \"co\": %.3f, \"o3\": %.3f,"
+	            "\"no2\": %.3f, \"x\": %.3f, \"y\": %.3f, \"z\": %.3f,  \"h2s\": %.0f, \"wargningTemp\": %.1f, \"alarmTemp\": %.1f}",
+	            temp, humi, pm25, pm10, pm1, co2, voc, ch2o, co, o3, no2, xr, yr, zr, h2sData, warningT, alarmT);
+//		 fflush(stdout);
+//		 printf("\n");
+   		 if(curl) {
+				struct MemoryStruct data;
+                                data.memory = malloc(1);
+                                data.size = 0;
 
-						res = curl_easy_perform(curl);  // http 요청을 보낸 후 응답 값을 res에 저장
+				struct curl_slist *headers = NULL;
 
-						if(res != CURLE_OK) {
-							
-							fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-						
-						}
+				headers = curl_slist_append(headers, "Content-Type: application/json");
 
-						curl_slist_free_all(headers); //사용이 끝난 헤더 리스트를 해제
+				curl_easy_setopt(curl, CURLOPT_URL, "http://feelink.iptime.org:5001/setdata");
 
-					}
-				sleep(1); // 1초간 지연
-  		    }
-			
-		curl_easy_cleanup(curl); // 모든 리소스 해제
+				curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+
+				curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, sensorDataString);
+
+				curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_memory_callback);
+
+                                curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&data);
+
+				res = curl_easy_perform(curl);
+
+				if(res != CURLE_OK) {
+					fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+				}
+
+//					curl_slist_free_all(headers);
+					free(data.memory);
+				}
+
+		}
+		curl_easy_cleanup(curl);
 		gpioTerminate();
 		return 0;
 }
-
-
-
-
 
