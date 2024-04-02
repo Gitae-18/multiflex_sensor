@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const wsModule =require('ws');
 const port = 5001;
+const raspberryPiStatus = {};
 app.use(cors());
 app.use(bodyParser.json());
 app.post('/', (req, res, next) => {
@@ -24,6 +25,7 @@ app.post('/setdata', (req, res) => {
     const data = req.body;
     const ID = req.body.id;
     //sendData = data;
+    storedData = null;
     if (!req.body) {
         return res.status(400).json({
             status: 'error',
@@ -59,18 +61,10 @@ app.get('/getdata', (req, res) => {
         });
     }
     /* const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData; */
-    const selectedData = storedData[selectedID] || {};
+    const selectedData = storedData[selectedID] ||  '-';
     res.status(200).json(selectedData);
 });
-/* app.use(express.static(path.join(__dirname, '/build')));
- */
-// 메인페이지 접속 시 build 폴더의 index.html 보내줘
-/* app.get('/', (req, res) => {
-  req.sendFile(path.join(__dirname, '/build/index.html'));
-})
-app.get('*', (req, res) => {
-    req.sendFile(path.join(__dirname, '/build/index.html'));
-  }); */
+
 app.listen(port, () => {
     console.log(`Server is running on port : ${port}`);
 });
