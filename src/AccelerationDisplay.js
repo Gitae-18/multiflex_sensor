@@ -30,10 +30,28 @@ const AccelerationDisplay = () => {
         },
       });
       const data = await response.json();
-      setReceivedData(data);
-      if(response.ok){
-      console.log('데이터를 성공적으로 받았습니다:', data);
-      }
+      if (!response.ok) {
+        console.error('서버에서 에러를 반환했습니다.');
+        setReceivedData({
+            temp: '-',
+            humidity: '-',
+            pm1: '-',
+            pm25: '-',
+            pm10: '-',
+            co2: '-',
+            o3: '-',
+            no2: '-',
+            voc: '-',
+            h2s: '-',
+            x: '-',
+            y: '-',
+            z: '-',
+            warningTemp: '-',
+            alarmTemp: '-',
+        });
+    } else {
+        setReceivedData(data);
+    }
     
     } catch (error) {
       console.error('데이터를 받는 도중 오류가 발생했습니다:', error);
@@ -51,12 +69,7 @@ const AccelerationDisplay = () => {
       clearInterval(intervalId);
     };
   }, [receivedData, deviceID]); 
-  /* useEffect(() => {
-    
-    fetchDataFromServer();
 
-}, [deviceID]); */
-console.log(typeof(receiveData))
   return (
     <div>
        <div className="logo">

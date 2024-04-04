@@ -3,9 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const wsModule =require('ws');
+const timeout = require('connect-timeout');
 const port = 5001;
-const raspberryPiStatus = {};
 app.use(cors());
 app.use(bodyParser.json());
 app.post('/', (req, res, next) => {
@@ -19,7 +18,7 @@ app.get('/', (req, res) => {
     res.send('Hello, this is the root path!');
 });
 let storedData = {};
-let storedData2 = {};
+//let storedData2 = {};
 
 app.post('/setdata', (req, res) => {
     const data = req.body;
@@ -50,7 +49,7 @@ app.post('/setdata', (req, res) => {
     storedData[data.id] = data;
     res.status(200).json(data);
 });
-
+app.use(timeout('15s'));
 app.get('/getdata', (req, res) => {
     const selectedID = req.query.id;
 
@@ -60,8 +59,17 @@ app.get('/getdata', (req, res) => {
             error: 'ID parameter is missing in the request',
         });
     }
+    
     /* const selectedData = selectedID === '1' ? storedData : selectedID === '2' ? storedData2 : storedData; */
     const selectedData = storedData[selectedID] ||  '-';
+
+    if (!selectedData) {
+        return res.status(404).json({
+            status: 'error',
+            error: 'Requested data not found or not updated',
+        });
+    }
+    
     res.status(200).json(selectedData);
 });
 
