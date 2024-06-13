@@ -307,17 +307,17 @@ int main(){
 		    unsigned char receivedData[100];
 		    int count = 26;
 		    for(int i = 0; i < count; i++) {
-			receivedData[i] = serReadByte(serialPort);
+				receivedData[i] = serReadByte(serialPort);
 		    }
 			time_sleep(0.5);
 		    char data[26];
-	            for (int i = 0; i < 26; i++) {
-	                data[i] = serReadByte(serial_port);
-        	    }
+	        for (int i = 0; i < 26; i++) {
+	            data[i] = serReadByte(serial_port);
+        	}
 			time_sleep(0.5);
 		    for (int i = 0; i < 9; i++) {
 		        receivedSensor[i] = serReadByte(sensorPort);
-	            }
+	        }
 
 		int opStateMSB = receivedData[8];
 		int opStateLSB = receivedData[9];

@@ -4,23 +4,27 @@
   "private": true,
   "proxy": "http://localhost:4001",
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.23.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "body-parser": "^1.20.2",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "http": "^0.0.1-security",
+    "path-browserify": "^1.0.1",
     "plotly.js": "^2.27.1",
+    "querystring-es3": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-plotly.js": "^2.6.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.3",
+    "stream-browserify": "^3.0.0",
     "web-vitals": "^2.1.4",
-    "ws": "^8.14.2",
-    "@babel/plugin-proposal-private-property-in-object": "^7.23.7"
-    
+    "ws": "^8.14.2"
   },
   "scripts": {
     "start": "react-scripts start",
