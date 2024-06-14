@@ -12,6 +12,25 @@ let storedData = {}; // Ensure storedData is initialized properly
 let lastReceivedTime = {}; // Store the last received time for each ID
 const DATA_EXPIRATION_MS = 1000; // Data expiration time in milliseconds (1 second)
 
+// Default response object for expired or missing data
+const defaultData = {
+    temp: '-',
+    humidity: '-',
+    pm1: '-',
+    pm25: '-',
+    pm10: '-',
+    co2: '-',
+    o3: '-',
+    no2: '-',
+    voc: '-',
+    h2s: '-',
+    x: '-',
+    y: '-',
+    z: '-',
+    warningTemp: '-',
+    alarmTemp: '-',
+};
+
 app.post('/setdata', (req, res) => {
     const data = req.body;
     console.log('Received data:', data);  // Log the received data for debugging
@@ -56,10 +75,10 @@ app.get('/getdata', (req, res) => {
     const isDataExpired = !lastTime || (currentTime - lastTime) > DATA_EXPIRATION_MS;
 
     if (isDataExpired) {
-        return res.status(200).json(null); // Return null if the data is expired or never received
+        return res.status(200).json(defaultData); // Return default data if the data is expired or never received
     }
     
-    const selectedData = storedData[selectedID];
+    const selectedData = storedData[selectedID] || defaultData;
     
     res.status(200).json(selectedData);
 });
