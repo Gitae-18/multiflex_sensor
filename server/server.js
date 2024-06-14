@@ -1,15 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
-const app = express();
 const timeout = require('connect-timeout');
+const app = express();
 const port = 5001;
 
 app.use(cors());
 app.use(bodyParser.json());
 
 let storedData = {}; // Ensure storedData is initialized properly
+let lastReceivedTime = {}; // Store the last received time for each ID
+const DATA_EXPIRATION_MS = 1000; // Data expiration time in milliseconds (1 second)
 
 app.post('/setdata', (req, res) => {
     const data = req.body;
@@ -33,6 +34,7 @@ app.post('/setdata', (req, res) => {
         storedData = {};
     }
     storedData[data.id] = data;
+    lastReceivedTime[data.id] = Date.now(); // Update the last received time for the given ID
 
     res.status(200).json(data);
 });
@@ -49,18 +51,19 @@ app.get('/getdata', (req, res) => {
         });
     }
     
-    const selectedData = storedData[selectedID] ||  '-';
+    const currentTime = Date.now();
+    const lastTime = lastReceivedTime[selectedID];
+    const isDataExpired = !lastTime || (currentTime - lastTime) > DATA_EXPIRATION_MS;
 
-    if (selectedData === '-') {
-        return res.status(404).json({
-            status: 'error',
-            error: 'Requested data not found or not updated',
-        });
+    if (isDataExpired) {
+        return res.status(200).json(null); // Return null if the data is expired or never received
     }
+    
+    const selectedData = storedData[selectedID];
     
     res.status(200).json(selectedData);
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port : ${port}`);
+    console.log(`Server is running on port: ${port}`);
 });
