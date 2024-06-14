@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 let storedData = {}; // Ensure storedData is initialized properly
 let lastReceivedTime = {}; // Store the last received time for each ID
-const DATA_EXPIRATION_MS = 1000; // Data expiration time in milliseconds (1 second)
+const DATA_EXPIRATION_MS = 5000; // Data expiration time in milliseconds (1 second)
 
 // Default response object for expired or missing data
 const defaultData = {
