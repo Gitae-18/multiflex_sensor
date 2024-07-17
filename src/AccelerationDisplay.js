@@ -7,10 +7,10 @@ const AccelerationDisplay = () => {
   const [prevDeviceID, setPrevDeviceID] = useState("");
   const [loading, setLoading] = useState(false);
   const [deviceID, setDeviceID] = useState("1");
-
   const arraySize = 100;
   const [intervalId, setIntervalId] = useState(null);
-
+  const [device, setDevice] = useState(null);
+  const [batteryLevel, setBatteryLevel] = useState(null);
   const selectID = (event) => {
     const selectedID = event.target.value;
     setDeviceID(selectedID);
@@ -59,6 +59,7 @@ const AccelerationDisplay = () => {
       setLoading(false); // 데이터 수신 후 loading 비활성화
     } */
   },[deviceID]);
+  
   useEffect(() => {
 
       const id = setInterval(fetchDataFromServer, 1000);
@@ -69,7 +70,33 @@ const AccelerationDisplay = () => {
       clearInterval(intervalId);
     };
   }, [receivedData, deviceID]); 
+  const requestDevice = async () => {
+    try {
+        const device = await navigator.bluetooth.requestDevice({
+            filters: [{ services: ['c7bdb943-af8a-481f-bf8b-813d2fdd41fb'] }] // 원하는 서비스로 필터링
+        });
+        setDevice(device);
+        console.log('Device selected:', device.name);
+    } catch (error) {
+        console.log('Error requesting device:', error);
+    }
+};
 
+const connectDevice = async () => {
+    if (!device) return;
+
+    try {
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService('c7bdb943-af8a-481f-bf8b-813d2fdd41fb');
+        const characteristic = await service.getCharacteristic('beb5483e-36e1-4688-b7f5-ea07361b26a8');
+        const value = await characteristic.readValue();
+        const batteryLevel = value.getUint8(0);
+        setBatteryLevel(batteryLevel);
+        console.log('Battery level:', batteryLevel);
+    } catch (error) {
+        console.log('Error connecting to device:', error);
+    }
+};
   return (
     <div>
        <div className="logo">
@@ -87,6 +114,8 @@ const AccelerationDisplay = () => {
          {/* <h4>{loading?"connecting...":"connected !"}</h4> */}
           <div className="horizontal-line"/>
           <div style={{padding:'20px 100px'}}>
+          {/* <button onClick={requestDevice}>Connect to BLE Device</button>
+          {device && <button onClick={connectDevice}>Read Battery Level</button>} */}
           {receivedData && (
             <>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
