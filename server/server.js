@@ -4,13 +4,14 @@ const cors = require('cors');
 const timeout = require('connect-timeout');
 const app = express();
 const port = 5001;
+const axios = require('axios');
 
 app.use(cors());
 app.use(bodyParser.json());
 
 let storedData = {}; // Ensure storedData is initialized properly
 let lastReceivedTime = {}; // Store the last received time for each ID
-const DATA_EXPIRATION_MS = 5000; // Data expiration time in milliseconds (1 second)
+const DATA_EXPIRATION_MS = 5000; //
 
 // Default response object for expired or missing data
 const defaultData = {
@@ -54,7 +55,13 @@ app.post('/setdata', (req, res) => {
     }
     storedData[data.id] = data;
     lastReceivedTime[data.id] = Date.now(); // Update the last received time for the given ID
-
+    axios.post('http://yuseong.uokdc.net:12080/api/request_sensor_data', data)
+        .then(response => {
+            console.log('Data forwarded successfully:', response.data);
+        })
+        .catch(error => {
+            console.error('Error forwarding data:', error);
+        });        
     res.status(200).json(data);
 });
 
