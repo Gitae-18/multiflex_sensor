@@ -17,7 +17,6 @@ const AccelerationDisplay = () => {
     // 선택된 센서 ID를 state에 업데이트
     // 다른 작업도 필요하다면 여기에 추가할 수 있습니다.
 };
-console.log(receivedData.wargningTemp)
   const fetchDataFromServer = useCallback(async () => {
     try {
      /*  if (deviceID !== prevDeviceID) {
@@ -238,14 +237,14 @@ const connectDevice = async () => {
           </div>
           </div>
           <div className="sensor-card">
-          <div className="sensor-header">Smoke/Fire sensor</div>
+          <div className="sensor-header" style={receivedData.nowTemp > 70?{backgroundColor:'#ffc400'}:{backgroundColor:'#c70f0f'}}>Smoke/Fire sensor</div>
           <div className="sensor-body">
             <img src="./images/smoke.png" id="temp" alt="temperature-image"/>
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">화재/연기센서</div>
           <div style={{marginTop:'8px'}}>
-          <div className="sensor-value-v">Warn : {receivedData.wargningTemp > 400  ? "-" : receivedData.wargningTemp} ℃</div>
+          <div className="sensor-value-v">Warn : {receivedData.nowTemp > 400  ? "-" : receivedData.nowTemp} ℃</div>
           <div className="sensor-value-v">Alarm : {receivedData.alarmTemp > 400  ? "-" : receivedData.alarmTemp} ℃</div>
           </div>
           </div>
