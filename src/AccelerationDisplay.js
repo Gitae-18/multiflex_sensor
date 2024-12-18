@@ -237,8 +237,8 @@ const connectDevice = async () => {
           </div>
           </div>
           <div className="sensor-card">
-          <div className="sensor-header" style={receivedData.nowTemp > 70?{backgroundColor:'#ffc400'}:{backgroundColor:'#c70f0f'}}>Smoke/Fire sensor</div>
-          <div className="sensor-body">
+          <div className="sensor-header" style={receivedData.nowTemp > 70?{backgroundColor:'#c70f0f'}:{backgroundColor:'#043b75'}}>Smoke/Fire sensor</div>
+          <div className="sensor-body" style={receivedData.nowTemp > 70?{backgroundColor:'#c70f0f'}:{backgroundColor:'#043b75'}}>
             <img src="./images/smoke.png" id="temp" alt="temperature-image"/>
           </div>
           <div className="sensor-footer">
