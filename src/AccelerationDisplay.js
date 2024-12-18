@@ -244,7 +244,7 @@ const connectDevice = async () => {
           <div className="sensor-footer">
           <div className="sensor-type">화재/연기센서</div>
           <div style={{marginTop:'8px'}}>
-          <div className="sensor-value-v">Warn : {receivedData.nowTemp > 400  ? "-" : receivedData.nowTemp} ℃</div>
+          <div className="sensor-value-v">Temp : {receivedData.nowTemp > 400  ? "-" : receivedData.nowTemp} ℃</div>
           <div className="sensor-value-v">Alarm : {receivedData.alarmTemp > 400  ? "-" : receivedData.alarmTemp} ℃</div>
           </div>
           </div>
