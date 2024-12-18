@@ -17,6 +17,7 @@ const AccelerationDisplay = () => {
     // 선택된 센서 ID를 state에 업데이트
     // 다른 작업도 필요하다면 여기에 추가할 수 있습니다.
 };
+console.log(receivedData.wargningTemp)
   const fetchDataFromServer = useCallback(async () => {
     try {
      /*  if (deviceID !== prevDeviceID) {
