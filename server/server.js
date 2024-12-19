@@ -55,7 +55,7 @@ app.post('/setdata', (req, res) => {
     }
     storedData[data.id] = data;
     lastReceivedTime[data.id] = Date.now(); // Update the last received time for the given ID
-    axios.post('http://jinsystem.kr:12080/api/request_sensor_data', data)
+    axios.post('http://jinsystem.kr:12080/api/request_sensor_data', storedData)
         .then(response => {
             console.log('Data forwarded successfully:', response.data);
         })
