@@ -3,20 +3,27 @@ import Plot from "react-plotly.js";
 import './main.css';
 const AccelerationDisplay = () => {
   const [receivedData, setReceivedData] = useState([]);
-  const [receiveData, setReceiveData] = useState([]);
-  const [prevDeviceID, setPrevDeviceID] = useState("");
-  const [loading, setLoading] = useState(false);
+  //const [receiveData, setReceiveData] = useState([]);
+  /* const [prevDeviceID, setPrevDeviceID] = useState("");
+  const [loading, setLoading] = useState(false); */
   const [deviceID, setDeviceID] = useState("1");
   const arraySize = 100;
   const [intervalId, setIntervalId] = useState(null);
   const [device, setDevice] = useState(null);
   const [batteryLevel, setBatteryLevel] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => {
+        setIsVisible(!isVisible);
+  };
+
   const selectID = (event) => {
     const selectedID = event.target.value;
     setDeviceID(selectedID);
     // 선택된 센서 ID를 state에 업데이트
     // 다른 작업도 필요하다면 여기에 추가할 수 있습니다.
-};
+  };
+
   const fetchDataFromServer = useCallback(async () => {
     try {
      /*  if (deviceID !== prevDeviceID) {
@@ -97,6 +104,21 @@ const connectDevice = async () => {
         console.log('Error connecting to device:', error);
     }
 };
+const getPMBackgroundColor = (value, type) => {
+  if (value === '-' || value === undefined) return '#ccc'; // 데이터 없을 때 회색
+  
+  if (type === "pm10") {
+      if (value <= 30) return "#4CAF50"; // 초록색 (좋음)
+      if (value <= 80) return "#FFEB3B"; // 노랑 (보통)
+      if (value <= 150) return "#FF9800"; // 주황 (나쁨)
+      return "#F44336"; // 빨강 (매우 나쁨)
+  } else if (type === "pm25") {
+      if (value <= 15) return "#4CAF50"; // 초록색 (좋음)
+      if (value <= 35) return "#FFEB3B"; // 노랑 (보통)
+      if (value <= 75) return "#FF9800"; // 주황 (나쁨)
+      return "#F44336"; // 빨강 (매우 나쁨)
+  }
+};
   return (
     <div>
        <div className="logo">
@@ -150,7 +172,7 @@ const connectDevice = async () => {
               <div className="sensor-value">{receivedData.pm1} ㎍/㎥</div>
               </div>
               </div>
-              <div className="sensor-card">
+              <div className="sensor-card" style={{ backgroundColor: getPMBackgroundColor(receivedData.pm25, "pm25") }}>
               <div className="sensor-header">PM2.5</div>
               <div className="sensor-body">
                 <img src="./images/PM.png" id="temp" alt="pm2.5-image"/>
@@ -160,7 +182,7 @@ const connectDevice = async () => {
               <div className="sensor-value">{receivedData.pm25} ㎍/㎥</div>
               </div>
               </div>
-              <div className="sensor-card">
+              <div className="sensor-card" style={{ backgroundColor: getPMBackgroundColor(receivedData.pm10, "pm10") }}>
               <div className="sensor-header">PM10</div>
               <div className="sensor-body">
                 <img src="./images/PM.png" id="temp" alt="pm10-image"/>
@@ -253,6 +275,120 @@ const connectDevice = async () => {
         </>
         )}
         </div>
+        <div style={{ textAlign: 'center', marginTop: '30px' }}>
+            {/* 타이틀 및 보기 버튼 */}
+            <div 
+                onClick={toggleVisibility} 
+                style={{
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    display: 'inline-block',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    backgroundColor: '#f4f4f4',
+                    border: '1px solid #ccc'
+                }}
+            >
+                대기환경 기준표 {isVisible ? '▲' : '▼'}
+            </div>
+
+            {/* 표 전체 컨테이너 (숨김/보임 적용) */}
+            <div 
+                style={{
+                    maxHeight: isVisible ? '1000px' : '0',
+                    overflow: 'hidden',
+                    transition: 'max-height 0.5s ease-in-out',
+                    marginTop: '10px'
+                }}
+            >
+                {/* 미세먼지 기준표 */}
+                <h3 style={{ marginBottom: '15px' }}>미세먼지 등급 기준</h3>
+                <table style={{
+                    width: '80%',
+                    margin: '0 auto',
+                    borderCollapse: 'collapse',
+                    border: '1px solid #ccc',
+                    fontSize: '16px'
+                }}>
+                    <thead>
+                        <tr style={{ backgroundColor: '#f4f4f4', borderBottom: '2px solid #bbb' }}>
+                            <th style={{ padding: '10px', borderRight: '1px solid #bbb' }}>등급</th>
+                            <th style={{ padding: '10px', borderRight: '1px solid #bbb'}}>미세먼지지 (㎍/㎥)</th>
+                            <th style={{ padding: '10px' }}>초미세먼지 (㎍/㎥)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>좋음</td>
+                            <td style={{ backgroundColor: '#D4EECF', padding: '10px', borderRight: '1px solid #ccc !important' }}>0 ~ 30</td>
+                            <td style={{ backgroundColor: '#D7E9F7', padding: '10px' }}>0 ~ 15</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc'}}>보통</td>
+                            <td style={{ backgroundColor: '#FFF5CC', padding: '10px', borderRight: '1px solid #ccc !important' }}>31 ~ 80</td>
+                            <td style={{ backgroundColor: '#FCE8D5', padding: '10px' }}>16 ~ 35</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold',borderRight: '1px solid #ccc' }}>나쁨</td>
+                            <td style={{ backgroundColor: '#FFDDC1', padding: '10px', borderRight: '1px solid #ccc' }}>81 ~ 150</td>
+                            <td style={{ backgroundColor: '#F4CCCC', padding: '10px' }}>36 ~ 75</td>
+                        </tr>
+                        <tr>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>매우나쁨</td>
+                            <td style={{ backgroundColor: '#FFB3B3', padding: '10px', borderRight: '1px solid #ccc' }}>151 이상</td>
+                            <td style={{ backgroundColor: '#E6A8A8', padding: '10px' }}>76 이상</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {/* 오존 및 이산화질소 기준표 */}
+                <h3 style={{ marginTop: '30px', marginBottom: '15px' }}>오존 및 이산화질소 대기환경기준</h3>
+                <table style={{
+                    width: '80%',
+                    margin: '0 auto',
+                    borderCollapse: 'collapse',
+                    border: '1px solid #ccc',
+                    fontSize: '16px'
+                }}>
+                   <colgroup>
+                      <col style={{ width: '30%' }} /> 
+                      <col style={{ width: '25%' }} /> 
+                      <col style={{ width: '45%' }} /> 
+                  </colgroup>
+                    <thead>
+                        <tr style={{ backgroundColor: '#f4f4f4', borderBottom: '2px solid #bbb !important' }}>
+                            <th style={{ padding: '10px', borderRight: '1px solid #bbb ' }}>오염물질</th>
+                            <th style={{ padding: '10px', borderRight: '1px solid #bbb' }}>구분</th>
+                            <th style={{ padding: '10px' }}>기준치 (ppm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>오존 (O₃)</td>
+                            <td style={{ padding: '10px', borderRight: '1px solid #ccc' }}>8시간 평균치</td>
+                            <td style={{ padding: '10px' }}>0.06</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold !important', borderRight: '1px solid #ccc' }}>오존 (O₃)</td>
+                            <td style={{ padding: '10px', borderRight: '1px solid #ccc' }}>1시간 평균치</td>
+                            <td style={{ padding: '10px' }}>0.1</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>이산화질소 (NO₂)</td>
+                            <td style={{ padding: '10px', borderRight: '1px solid #ccc' }}>1시간 평균치</td>
+                            <td style={{ padding: '10px' }}>0.1</td>
+                        </tr>
+                        <tr>
+                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc'}}>이산화질소 (NO₂)</td>
+                            <td style={{ padding: '10px', borderRight: '1px solid #ccc' }}>연평균치</td>
+                            <td style={{ padding: '10px' }}>0.03</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div className="bottom">
         </div>
     </div>
@@ -262,60 +398,3 @@ const connectDevice = async () => {
 export default AccelerationDisplay;
 
 
-/*   const [receiveData, setReceiveData] = useState({
-    xArray: [],
-    yArray: [],
-    zArray: [],
-  })
-  const [update, setUpdate] = useState({
-    x: new Array(100).fill(NaN),
-    y: new Array(100).fill(NaN),
-    z: new Array(100).fill(NaN),
-  }); */
- {/*  <Plot
-            data={[
-              { y: update.x, name: 'X' },
-              { y: update.y, name: 'Y' },
-              { y: update.z, name: 'Z' },
-            ]}
-            layout={{
-              title: 'XYZ Data',
-              width: 1900, // Set the width of the chart
-              height: 700, // Set the height of the chart
-            }}
-          /> */}
-         
-          {/* <p>X: {receiveData.xArray[receiveData.xArray.length - 1]}</p>
-          <p>Y: {receiveData.yArray[receiveData.yArray.length - 1]}</p>
-          <p>Z: {receiveData.zArray[receiveData.zArray.length - 1]}</p> */}
-
-
-           /*  setUpdate((prevData) => {
-        const currentIndex = (prevData.currentIndex + 1) % arraySize;
-
-        return {
-          x: [
-            ...prevData.x.slice(0, currentIndex),
-            data.x,
-            ...prevData.x.slice(currentIndex + 1),
-          ],
-          y: [
-            ...prevData.y.slice(0, currentIndex),
-            data.y,
-            ...prevData.y.slice(currentIndex + 1),
-          ],
-          z: [
-            ...prevData.z.slice(0, currentIndex),
-            data.z,
-            ...prevData.z.slice(currentIndex + 1),
-          ],
-          currentIndex,
-        };
-      });
-      setReceiveData((prevData) => ({
-        xArray: [...prevData.xArray, data.x],
-        yArray: [...prevData.yArray, data.y],
-        zArray: [...prevData.zArray, data.z],
-      }));
-       */
-      // 받은 데이터를 상태에 저장하거나 다른 작업을 수행할 수 있습니다.
