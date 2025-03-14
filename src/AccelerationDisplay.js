@@ -221,7 +221,7 @@ const getPMBackgroundColor = (value, type) => {
           </div>
           <div className="sensor-footer">
           <div className="sensor-type">이산화질소</div>
-          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.no2} ppm</div>
+          <div className="sensor-value" style={{position:'relative',top:'7px'}}>{receivedData.no2 / 1000.0} ppm</div>
           </div>
           </div>
           <div className="sensor-card">

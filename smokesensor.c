@@ -323,7 +323,7 @@ int main(){
 		int opStateLSB = receivedData[9];
 		int opState = (opStateMSB << 8) | opStateLSB;
 		int bit2 = (opState >> 1)&1;
-		int bit3 = (opState >> 1)&1;
+		int bit3 = (opState >> 2)&1;
 
 /*	        int tempMSB = receivedData[11];
 	        int tempLSB = receivedData[12];
