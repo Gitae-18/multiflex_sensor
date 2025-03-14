@@ -320,7 +320,7 @@ const getPMBackgroundColor = (value, type) => {
                     <thead>
                         <tr style={{ backgroundColor: '#f4f4f4', borderBottom: '2px solid #bbb' }}>
                             <th style={{ padding: '10px', borderRight: '1px solid #bbb' }}>등급</th>
-                            <th style={{ padding: '10px', borderRight: '1px solid #bbb'}}>미세먼지지 (㎍/㎥)</th>
+                            <th style={{ padding: '10px', borderRight: '1px solid #bbb'}}>미세먼지 (㎍/㎥)</th>
                             <th style={{ padding: '10px' }}>초미세먼지 (㎍/㎥)</th>
                         </tr>
                     </thead>
