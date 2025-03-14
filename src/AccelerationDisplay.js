@@ -294,7 +294,7 @@ const getPMBackgroundColor = (value, type) => {
             </div>
 
             {/* 표 전체 컨테이너 (숨김/보임 적용) */}
-            <div 
+            <div className={`hidden-content ${isVisible ? 'open' : ''}`}
                 style={{
                     maxHeight: isVisible ? '1000px' : '0',
                     overflow: 'hidden',
