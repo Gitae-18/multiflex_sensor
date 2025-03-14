@@ -327,18 +327,18 @@ const getPMBackgroundColor = (value, type) => {
                     <tbody>
                       <tr style={{ borderBottom: '1px solid #ccc' }}>
                           <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>좋음</td>
-                          <td style={{ backgroundColor: '#D4EECF', padding: '10px', borderRight: '1px solid #ccc' }}>0 ~ 30</td>
-                          <td style={{ backgroundColor: '#D7E9F7', padding: '10px' }}>0 ~ 15</td>
+                          <td style={{ backgroundColor: '#008000', color: 'white', fontWeight: 'bold', padding: '10px', borderRight: '1px solid #ccc' }}>0 ~ 30</td>
+                          <td style={{ backgroundColor: '#008000', color: 'white', fontWeight: 'bold', padding: '10px' }}>0 ~ 15</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #ccc' }}>
                           <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>보통</td>
-                          <td style={{ backgroundColor: '#FFF5CC', padding: '10px', borderRight: '1px solid #ccc' }}>31 ~ 80</td>
-                          <td style={{ backgroundColor: '#FCE8D5', padding: '10px' }}>16 ~ 35</td>
+                          <td style={{ backgroundColor: '#FFD700', color: 'black', fontWeight: 'bold', padding: '10px', borderRight: '1px solid #ccc' }}>31 ~ 80</td>
+                          <td style={{ backgroundColor: '#FFD700', color: 'black', fontWeight: 'bold', padding: '10px' }}>16 ~ 35</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #ccc' }}>
                           <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>나쁨</td>
-                          <td style={{ backgroundColor: '#FFDDC1', padding: '10px', borderRight: '1px solid #ccc' }}>81 ~ 150</td>
-                          <td style={{ backgroundColor: '#F4CCCC', padding: '10px' }}>36 ~ 75</td>
+                          <td style={{ backgroundColor: '#FF8C00', color: 'white', fontWeight: 'bold', padding: '10px', borderRight: '1px solid #ccc' }}>81 ~ 150</td>
+                          <td style={{ backgroundColor: '#FF8C00', color: 'white', fontWeight: 'bold', padding: '10px' }}>36 ~ 75</td>
                       </tr>
                       <tr>
                           <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>매우나쁨</td>
