@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Plot from "react-plotly.js";
 import './main.css';
 const AccelerationDisplay = () => {
@@ -12,9 +12,15 @@ const AccelerationDisplay = () => {
   const [device, setDevice] = useState(null);
   const [batteryLevel, setBatteryLevel] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-
+  const tableRef = useRef(null);
   const toggleVisibility = () => {
         setIsVisible(!isVisible);
+        if (!isVisible) {
+          // 📌 표가 열릴 때 해당 위치로 스크롤 이동
+          setTimeout(() => {
+              tableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 300); // 애니메이션이 끝나는 시점에 스크롤 이동
+      }
   };
 
   const selectID = (event) => {
@@ -294,7 +300,7 @@ const getPMBackgroundColor = (value, type) => {
             </div>
 
             {/* 표 전체 컨테이너 (숨김/보임 적용) */}
-            <div className={`hidden-content ${isVisible ? 'open' : ''}`}
+            <div ref={tableRef}   className={`hidden-content ${isVisible ? 'open' : ''}`}
                 style={{
                     maxHeight: isVisible ? '1000px' : '0',
                     overflow: 'hidden',
