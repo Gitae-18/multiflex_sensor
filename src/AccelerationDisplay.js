@@ -371,7 +371,7 @@ const getPMBackgroundColor = (value, type) => {
                     </thead>
                     <tbody>
                         <tr style={{ borderBottom: '1px solid #ccc' }}>
-                            <td style={{ padding: '10px', fontWeight: 'bold', borderRight: '1px solid #ccc' }}>오존 (O₃)</td>
+                            <td style={{ padding: '10px', fontWeight: 'bold !important', borderRight: '1px solid #ccc' }}>오존 (O₃)</td>
                             <td style={{ padding: '10px', borderRight: '1px solid #ccc' }}>8시간 평균치</td>
                             <td style={{ padding: '10px' }}>0.06</td>
                         </tr>
