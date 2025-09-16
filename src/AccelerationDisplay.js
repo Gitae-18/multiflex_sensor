@@ -74,15 +74,9 @@ const AccelerationDisplay = () => {
   },[deviceID]);
   
   useEffect(() => {
-
-      const id = setInterval(fetchDataFromServer, 1000);
-
-      setIntervalId(id);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [receivedData, deviceID]); 
+  const id = setInterval(fetchDataFromServer, 1000);
+  return () => clearInterval(id);
+}, [deviceID]);
   const requestDevice = async () => {
     try {
         const device = await navigator.bluetooth.requestDevice({
